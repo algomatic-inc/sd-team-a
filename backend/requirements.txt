@@ -1,0 +1,8 @@
+autopep8
+mypy
+fastapi
+uvicorn
+python-dotenv
+langchain
+langchain_google_genai
+langserve[all]
