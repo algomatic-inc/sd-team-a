@@ -23,4 +23,5 @@ jobs:
     - name: Run tests
       run: |
         export PYTHONPATH=$(pwd)/backend
+        export $(cat .env.test | xargs)
         pytest --import-mode=importlib
