@@ -23,12 +23,17 @@ def read_root():
 
 
 @app.post("/geojson_png")
+@app.get("/geojson_png")
 async def geojson_png(request: Request):
     """
     GeoJSONを受け取り、PNG画像を返す。
     LineStringにのみ対応していることに注意。
     """
-    geojson_str = await request.body()
+    if request.method == "POST":
+        geojson_str = await request.body()
+    else:
+        geojson_str = request.query_params.get("geojson", "")
+
     img = geojson_to_img(geojson_str)
 
     # Imageオブジェクトをバイナリデータに変換
