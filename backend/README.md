@@ -5,7 +5,18 @@
 ```sh
 python3 -m venv venv
 source venv/bin/activate
-pip install autopep8 mypy fastapi uvicorn python-dotenv langchain langchain_google_genai "langserve[all]"
+```
+
+### Install dependencies
+
+```sh
+pip install -r requirements.txt
+```
+
+### Test
+
+```sh
+pytest --import-mode=importlib
 ```
 
 ### Build Docker image and run
