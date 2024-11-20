@@ -12,6 +12,8 @@
     "maxy",
     "miny",
     "Nobushi",
-    "uvicorn"
+    "pytest",
+    "uvicorn",
+    "venv"
   ]
 }
