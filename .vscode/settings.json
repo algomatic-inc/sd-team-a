@@ -13,6 +13,7 @@
     "miny",
     "Nobushi",
     "pytest",
+    "PYTHONPATH",
     "uvicorn",
     "venv"
   ]
