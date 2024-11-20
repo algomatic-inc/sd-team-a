@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
+import os
 from io import BytesIO
 from fastapi.responses import Response
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -14,6 +15,7 @@ app = FastAPI(
     title="Nobushi Backend Server",
     version="1.0",
     description="Nobushi Backend Server",
+    root_path=os.getenv("ROOT_PATH", ""),
 )
 
 
