@@ -8,6 +8,9 @@
     "fastapi",
     "genai",
     "langserve",
+    "maxx",
+    "maxy",
+    "miny",
     "Nobushi",
     "uvicorn"
   ]

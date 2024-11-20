@@ -1,8 +1,13 @@
 autopep8
+isort
 mypy
 fastapi
 uvicorn
+pytest
 python-dotenv
 langchain
 langchain_google_genai
 langserve[all]
+geopandas
+mercantile
+Pillow
