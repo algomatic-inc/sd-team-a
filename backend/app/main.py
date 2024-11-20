@@ -32,7 +32,7 @@ async def geojson_png(request: Request):
     if request.method == "POST":
         geojson_str = await request.body()
     else:
-        geojson_str = request.query_params.get("geojson", "")
+        geojson_str = request.query_params.get("geojson", "").encode()
 
     img = geojson_to_img(geojson_str)
 
