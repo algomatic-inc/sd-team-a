@@ -2,6 +2,8 @@
 
 ## Development
 
+### Initialize venv
+
 ```sh
 python3 -m venv venv
 source venv/bin/activate
@@ -19,14 +21,13 @@ pip install -r requirements.txt
 pytest --import-mode=importlib
 ```
 
-### Build Docker image and run
+### Run
 
 ```sh
-docker build -t nobushi-backend .
-docker run --env-file ../.env -p 8000:8000 nobushi-backend
+python app/main.py
 ```
 
-## Deploy
+## Deploy to Google Cloud
 
 ```sh
 gcloud auth login
