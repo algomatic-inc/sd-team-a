@@ -67,7 +67,7 @@ add_routes(
 
 add_routes(
     app,
-    ChatGoogleGenerativeAI(model="gemini-exp-1114"),
+    ChatGoogleGenerativeAI(model="gemini-exp-1121"),
     path="/gemini",
 )
 
