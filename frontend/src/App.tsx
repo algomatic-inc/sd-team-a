@@ -53,8 +53,8 @@ function App() {
     const lines = result.split("\n").filter((line) => line.trim() !== "");
     if (lines.length !== 2) {
       setSystemMessage((prev) => [
-      ...prev,
-      "出発地と目的地を正しく入力してください",
+        ...prev,
+        "出発地と目的地を正しく入力してください",
       ]);
       return;
     }
@@ -131,6 +131,7 @@ function App() {
     doit();
   }, [departureLatLng, destinationLatLng]);
 
+  /*
   useEffect(() => {
     const doit = async () => {
       if (routeGeoJson) {
@@ -157,6 +158,7 @@ function App() {
     };
     doit();
   }, [routeGeoJson, value]);
+  */
 
   return (
     <div
