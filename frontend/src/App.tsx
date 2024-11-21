@@ -49,11 +49,12 @@ function App() {
       return;
     }
     // resultは改行区切りの文字列で、1行目が出発地、2行目が目的地
-    // 2行じゃなかったらおかしいのでエラーを出す
-    if (result.split("\n").length !== 2) {
+    // 3行目が空行の場合は許容する
+    const lines = result.split("\n").filter((line) => line.trim() !== "");
+    if (lines.length !== 2) {
       setSystemMessage((prev) => [
-        ...prev,
-        "出発地と目的地を正しく入力してください",
+      ...prev,
+      "出発地と目的地を正しく入力してください",
       ]);
       return;
     }
