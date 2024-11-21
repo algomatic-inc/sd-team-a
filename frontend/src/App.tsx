@@ -39,7 +39,7 @@ function App() {
             userSelect: "none",
           }}
         >
-          野武士に散歩道を聞く
+          宇宙野武士に散歩道を聞く
         </div>
         <div
           style={{
