@@ -3,6 +3,8 @@ from fastapi import FastAPI, Request
 import os
 from io import BytesIO
 from fastapi.responses import Response
+from fastapi.middleware.cors import CORSMiddleware
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langserve import add_routes
 
@@ -16,6 +18,16 @@ app = FastAPI(
     version="1.0",
     description="Nobushi Backend Server",
     root_path=os.getenv("ROOT_PATH", ""),
+)
+
+# Set all CORS enabled origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 
@@ -51,6 +63,12 @@ add_routes(
     app,
     ChatGoogleGenerativeAI(model="gemini-1.5-pro"),
     path="/google",
+)
+
+add_routes(
+    app,
+    ChatGoogleGenerativeAI(model="gemini-exp-1114"),
+    path="/gemini",
 )
 
 if __name__ == "__main__":
