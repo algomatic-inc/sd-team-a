@@ -124,41 +124,74 @@ function App() {
         </div>
         <div
           style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
             display: "flex",
+            flexDirection: "column",
             color: "white",
-            gap: "10px",
-            marginTop: "6px",
+            background: "rgba(0, 0, 0, 0.5)",
+            paddingLeft: "10px",
+            paddingRight: "20px",
+            paddingTop: "4px",
+            paddingBottom: "4px",
+            zIndex: 10000,
           }}
         >
-          {departureString.length > 0 && destinationString.length > 0 && (
-            <>
-              <div>
-                出発地: {departureString}
+          <div>
+            出発地:{" "}
+            {departureString.length === 0 ? (
+              "不明"
+            ) : (
+              <>
+                {departureString}
                 {departureLatLng &&
                   `(${departureLatLng[0]}, ${departureLatLng[1]})`}
-              </div>
-              <div>
-                目的地: {destinationString}
+              </>
+            )}
+          </div>
+          <div>
+            目的地:{" "}
+            {destinationString.length === 0 ? (
+              "不明"
+            ) : (
+              <>
+                {destinationString}
                 {destinationLatLng &&
                   `(${destinationLatLng[0]}, ${destinationLatLng[1]})`}
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </div>
         </div>
         <div
           style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            display: "flex",
+            flexDirection: "column",
             color: "white",
-            fontSize: "12px",
-            marginTop: "6px",
+            background: "rgba(0, 0, 0, 0.5)",
+            paddingTop: "10px",
+            paddingLeft: "10px",
+            paddingRight: "20px",
+            paddingBottom: "10px",
+            zIndex: 9999,
           }}
         >
-          {systemMessage.map((message, index) => {
-            return (
-              <div key={index} style={{ textAlign: "center" }}>
-                {message}
-              </div>
-            );
-          })}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              color: "white",
+              gap: "10px",
+              fontSize: "12px",
+            }}
+          >
+            {systemMessage.map((message, index) => {
+              return <div key={index}>{message}</div>;
+            })}
+          </div>
         </div>
       </div>
       <div
