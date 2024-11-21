@@ -44,7 +44,6 @@ export const AutoResizeTextarea: React.FC<{
       style={{
         fontSize: "1.5em",
         width: "330px",
-        minHeight: "1.25em",
         resize: "none",
         border: "none",
         background: "transparent",

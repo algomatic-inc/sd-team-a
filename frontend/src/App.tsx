@@ -45,7 +45,7 @@ function App() {
           style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "end",
+            alignItems: "center",
             width: "400px",
             height: "auto",
             padding: "10px",
