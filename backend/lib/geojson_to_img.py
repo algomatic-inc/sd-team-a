@@ -96,7 +96,7 @@ def geojson_to_img(geojson_str):
                 if 0 <= coord[0] < merged_width and 0 <= coord[1] < merged_height
             ]
             if len(filtered_coords) > 1:  # 線を描画するには2点以上必要
-                draw.line(filtered_coords, fill="blue", width=3)
+                draw.line(filtered_coords, fill="blue", width=10)
             else:
                 print("Filtered coords are insufficient for line drawing.")
 

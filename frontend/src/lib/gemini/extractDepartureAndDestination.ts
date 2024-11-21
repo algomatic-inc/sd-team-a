@@ -18,7 +18,7 @@ You must follow the following format:
 - The destination location name must be extracted second.
 - Extract and output only the location name.
 
-input:
+Input:
 {input}
 `,
   });

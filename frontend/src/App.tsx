@@ -15,6 +15,8 @@ import { getValhallaResponseJsonWithCache } from "./lib/osm/getValhalla";
 import { decodePolyline } from "./lib/osm/decodePolyline";
 import { Layer } from "react-map-gl";
 import { fitBoundsToGeoJson } from "./lib/fitBoundsToGeoJson";
+import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
+import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 
 function App() {
   const [value, setValue] = useState("");
@@ -115,7 +117,6 @@ function App() {
             },
           ],
         } as turf.AllGeoJSON;
-        console.log(polyline);
         setRouteGeoJson(newGeoJson);
         fitBoundsToGeoJson(mapRef, newGeoJson, {
           top: 100,
@@ -128,6 +129,33 @@ function App() {
     };
     doit();
   }, [departureLatLng, destinationLatLng]);
+
+  useEffect(() => {
+    const doit = async () => {
+      if (routeGeoJson) {
+        setSystemMessage((prev) => [...prev, "散歩道の人工衛星画像を取得中…"]);
+        const imageUrl = await getRouteSatelliteImageryUrl(routeGeoJson);
+        console.log(imageUrl);
+        // imageUrl を fetch して base64 に変換して explainSatelliteImagery に渡す
+        const res = await fetch(imageUrl);
+        const blob = await res.blob();
+        setSystemMessage((prev) => [...prev, "散歩道の人工衛星画像を解析中…"]);
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = async () => {
+          let base64data = reader.result as string;
+          base64data = base64data.replace(
+            "data:application/octet-stream;",
+            "data:image/png;"
+          );
+          console.log(base64data);
+          const explain = await explainSatelliteImagery(value, base64data);
+          console.log(explain);
+        };
+      }
+    };
+    doit();
+  }, [routeGeoJson, value]);
 
   return (
     <div
