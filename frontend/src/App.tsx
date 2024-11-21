@@ -1,13 +1,20 @@
 import Map, {
   AttributionControl,
   GeolocateControl,
+  MapRef,
+  Source,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useCallback, useEffect, useState } from "react";
+import * as turf from "@turf/turf";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AutoResizeTextarea } from "./components/AutoResizeTextarea";
 import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
 import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
 import { getNominatimResponseJsonWithCache } from "./lib/osm/getNominatim";
+import { getValhallaResponseJsonWithCache } from "./lib/osm/getValhalla";
+import { decodePolyline } from "./lib/osm/decodePolyline";
+import { Layer } from "react-map-gl";
+import { fitBoundsToGeoJson } from "./lib/fitBoundsToGeoJson";
 
 function App() {
   const [value, setValue] = useState("");
@@ -20,6 +27,10 @@ function App() {
   const [destinationLatLng, setDestinationLatLng] = useState<
     [number, number] | null
   >(null);
+  const [routeGeoJson, setRouteGeoJson] = useState<turf.AllGeoJSON | null>(
+    null
+  );
+  const mapRef = useRef<MapRef | null>(null);
 
   const onSubmit = useCallback(async () => {
     if (value === "") {
@@ -65,15 +76,58 @@ function App() {
           destinationResult[0].lat,
           destinationResult[0].lon,
         ]);
-        setSystemMessage((prev) => [
-          ...prev,
-          "散歩道の位置情報を取得完了。",
-          "散歩道の経路を探索中…",
-        ]);
+        setSystemMessage((prev) => [...prev, "散歩道の位置情報を取得完了。"]);
       }
     };
     doit();
   }, [departureString, destinationString]);
+
+  useEffect(() => {
+    const doit = async () => {
+      if (departureLatLng && destinationLatLng) {
+        setSystemMessage((prev) => [...prev, "散歩道の経路を探索中…"]);
+        const valhallaResult = await getValhallaResponseJsonWithCache(
+          {
+            lon: departureLatLng[1],
+            lat: departureLatLng[0],
+          },
+          {
+            lon: destinationLatLng[1],
+            lat: destinationLatLng[0],
+          }
+        );
+        const polyline = decodePolyline(valhallaResult.trip.legs[0].shape);
+        setSystemMessage((prev) => [
+          ...prev,
+          "散歩道の経路を探索完了。",
+          "散歩道を表示中…",
+        ]);
+        const newGeoJson = {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "LineString",
+                coordinates: polyline,
+              },
+            },
+          ],
+        } as turf.AllGeoJSON;
+        console.log(polyline);
+        setRouteGeoJson(newGeoJson);
+        fitBoundsToGeoJson(mapRef, newGeoJson, {
+          top: 100,
+          bottom: 100,
+          left: 100,
+          right: 100,
+        });
+        setSystemMessage((prev) => [...prev, "散歩道の表示完了。"]);
+      }
+    };
+    doit();
+  }, [departureLatLng, destinationLatLng]);
 
   return (
     <div
@@ -201,6 +255,7 @@ function App() {
         }}
       >
         <Map
+          ref={mapRef}
           initialViewState={{
             latitude: 35.68385063,
             longitude: 139.75397279,
@@ -212,6 +267,22 @@ function App() {
         >
           <GeolocateControl />
           <AttributionControl position="bottom-right" />
+          {routeGeoJson && (
+            <>
+              <Source id="route" type="geojson" data={routeGeoJson}>
+                <Layer
+                  {...{
+                    id: "route",
+                    type: "line",
+                    paint: {
+                      "line-color": "blue",
+                      "line-width": 8,
+                    },
+                  }}
+                />
+              </Source>
+            </>
+          )}
         </Map>
       </div>
     </div>
