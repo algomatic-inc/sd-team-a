@@ -3,22 +3,77 @@ import Map, {
   GeolocateControl,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AutoResizeTextarea } from "./components/AutoResizeTextarea";
 import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
 import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
+import { getNominatimResponseJsonWithCache } from "./lib/osm/getNominatim";
 
 function App() {
   const [value, setValue] = useState("");
+  const [departureString, setDepartureString] = useState("");
+  const [destinationString, setDestinationString] = useState("");
+  const [systemMessage, setSystemMessage] = useState(["散歩道の入力を待機中…"]);
+  const [departureLatLng, setDepartureLatLng] = useState<
+    [number, number] | null
+  >(null);
+  const [destinationLatLng, setDestinationLatLng] = useState<
+    [number, number] | null
+  >(null);
 
   const onSubmit = useCallback(async () => {
     if (value === "") {
       return;
     }
-    console.log(value);
+    setSystemMessage((prev) => [
+      ...prev,
+      "散歩道の入力確認。",
+      "散歩道の地名を分析中…",
+    ]);
     const result = await extractDepartureAndDestination(value);
-    console.log(result);
+    if (!result) {
+      setSystemMessage((prev) => [...prev, "エラーが発生しました"]);
+      return;
+    }
+    // resultは改行区切りの文字列で、1行目が出発地、2行目が目的地
+    // 2行じゃなかったらおかしいのでエラーを出す
+    if (result.split("\n").length !== 2) {
+      setSystemMessage((prev) => [
+        ...prev,
+        "出発地と目的地を正しく入力してください",
+      ]);
+      return;
+    }
+    const [newDeparture, newDestination] = result.split("\n");
+    setDepartureString(newDeparture);
+    setDestinationString(newDestination);
+    setSystemMessage((prev) => [...prev, "散歩道の地名を分析完了。"]);
   }, [value]);
+
+  useEffect(() => {
+    const doit = async () => {
+      if (departureString.length > 0 && destinationString.length > 0) {
+        setSystemMessage((prev) => [...prev, "散歩道の位置情報をを取得中…"]);
+        const departureResult = await getNominatimResponseJsonWithCache(
+          departureString
+        );
+        setDepartureLatLng([departureResult[0].lat, departureResult[0].lon]);
+        const destinationResult = await getNominatimResponseJsonWithCache(
+          destinationString
+        );
+        setDestinationLatLng([
+          destinationResult[0].lat,
+          destinationResult[0].lon,
+        ]);
+        setSystemMessage((prev) => [
+          ...prev,
+          "散歩道の位置情報を取得完了。",
+          "散歩道の経路を探索中…",
+        ]);
+      }
+    };
+    doit();
+  }, [departureString, destinationString]);
 
   return (
     <div
@@ -66,6 +121,44 @@ function App() {
         >
           <AutoResizeTextarea value={value} onChange={setValue} />
           <NobushiSubmitButton onSubmit={onSubmit} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            color: "white",
+            gap: "10px",
+            marginTop: "6px",
+          }}
+        >
+          {departureString.length > 0 && destinationString.length > 0 && (
+            <>
+              <div>
+                出発地: {departureString}
+                {departureLatLng &&
+                  `(${departureLatLng[0]}, ${departureLatLng[1]})`}
+              </div>
+              <div>
+                目的地: {destinationString}
+                {destinationLatLng &&
+                  `(${destinationLatLng[0]}, ${destinationLatLng[1]})`}
+              </div>
+            </>
+          )}
+        </div>
+        <div
+          style={{
+            color: "white",
+            fontSize: "12px",
+            marginTop: "6px",
+          }}
+        >
+          {systemMessage.map((message, index) => {
+            return (
+              <div key={index} style={{ textAlign: "center" }}>
+                {message}
+              </div>
+            );
+          })}
         </div>
       </div>
       <div

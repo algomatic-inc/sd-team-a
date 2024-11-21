@@ -1,21 +1,34 @@
 import { RemoteRunnable } from "@langchain/core/runnables/remote";
-import { loadExtractDepartureAndDestinationChain } from "../chain/loadExtractDepartureAndDestination";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { AIMessage } from "@langchain/core/messages";
 
-export const extractDepartureAndDestination = async (inputText: string) => {
+export const extractDepartureAndDestination = async (input: string) => {
   const remoteRunnable = new RemoteRunnable({
     url: "https://api.nobushi.yuiseki.net/gemini/",
   });
 
-  const extractDepartureAndDestinationChain =
-    await loadExtractDepartureAndDestinationChain({
-      model: remoteRunnable,
-    });
+  const promptTemplate = new PromptTemplate({
+    inputVariables: ["input"],
+    template: `
+You are a named entity recognition model.
+Extract the location name of the departure and destination from the following input text.
 
-  const result = await extractDepartureAndDestinationChain.invoke({
-    input: inputText,
+You must follow the following format:
+- The departure location name must be extracted first.
+- The destination location name must be extracted second.
+- Extract and output only the location name.
+
+input:
+{input}
+`,
   });
 
-  console.log(result);
-
-  return result;
+  const prompt = await promptTemplate.format({ input });
+  try {
+    const result = (await remoteRunnable.invoke(prompt)) as AIMessage;
+    return result.content as string;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
