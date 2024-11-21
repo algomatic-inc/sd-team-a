@@ -3,12 +3,23 @@ import Map, {
   GeolocateControl,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { AutoResizeTextarea } from "./components/AutoResizeTextarea";
 import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
+import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
 
 function App() {
   const [value, setValue] = useState("");
+
+  const onSubmit = useCallback(async () => {
+    if (value === "") {
+      return;
+    }
+    console.log(value);
+    const result = await extractDepartureAndDestination(value);
+    console.log(result);
+  }, [value]);
+
   return (
     <div
       style={{
@@ -54,7 +65,7 @@ function App() {
           }}
         >
           <AutoResizeTextarea value={value} onChange={setValue} />
-          <NobushiSubmitButton onSubmit={() => console.log(value)} />
+          <NobushiSubmitButton onSubmit={onSubmit} />
         </div>
       </div>
       <div
