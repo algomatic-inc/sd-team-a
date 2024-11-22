@@ -18,6 +18,7 @@ pip install -r requirements.txt
 ### Test
 
 ```sh
+export PYTHONPATH=$(pwd)
 pytest --import-mode=importlib
 ```
 

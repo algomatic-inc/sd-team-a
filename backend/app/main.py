@@ -9,6 +9,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langserve import add_routes
 
 from lib.geojson_to_img import geojson_to_img
+from lib.chain.nobushi import nobushi_chain
 
 
 load_dotenv()
@@ -69,6 +70,12 @@ add_routes(
     app,
     ChatGoogleGenerativeAI(model="gemini-exp-1121"),
     path="/gemini",
+)
+
+add_routes(
+    app,
+    nobushi_chain(),
+    path="/nobushi",
 )
 
 if __name__ == "__main__":
