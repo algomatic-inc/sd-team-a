@@ -15,8 +15,6 @@ import { getValhallaResponseJsonWithCache } from "./lib/osm/getValhalla";
 import { decodePolyline } from "./lib/osm/decodePolyline";
 import { Layer } from "react-map-gl";
 import { fitBoundsToGeoJson } from "./lib/fitBoundsToGeoJson";
-import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
-import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 
 function App() {
   const [value, setValue] = useState("");
@@ -118,6 +116,7 @@ function App() {
             },
           ],
         } as turf.AllGeoJSON;
+        console.log(JSON.stringify(newGeoJson, null, 2));
         setRouteGeoJson(newGeoJson);
         fitBoundsToGeoJson(mapRef, newGeoJson, {
           top: 100,
