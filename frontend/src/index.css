@@ -71,6 +71,30 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.blinkingCursor {
+  margin: 0;
+  padding: 0;
+}
+
+.blinkingCursor::after {
+  position: relative;
+  top: 2px;
+  content: "";
+  width: 8px;
+  height: 1.1em;
+  margin-top: 0;
+  margin-left: 6px;
+  background: rgba(0, 158, 219, 1);
+  display: inline-block;
+  animation: cursor-blink 0.2s steps(2) infinite;
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

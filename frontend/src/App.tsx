@@ -106,7 +106,7 @@ function App() {
             lat: destinationLatLng[0],
           }
         );
-        console.log(valhallaResult);
+        console.log(JSON.stringify(valhallaResult, null, 2));
         const time = valhallaResult.trip.summary.time;
         setRequiredTime(time);
         const polyline = decodePolyline(valhallaResult.trip.legs[0].shape);
@@ -125,7 +125,6 @@ function App() {
             },
           ],
         } as turf.AllGeoJSON;
-        console.log(JSON.stringify(newGeoJson, null, 2));
         setRouteGeoJson(newGeoJson);
         fitBoundsToGeoJson(mapRef, newGeoJson, {
           top: 100,
@@ -149,7 +148,7 @@ function App() {
         }
         insertNewSystemMessage("散歩道の人工衛星画像を取得中…");
         const imageUrl = await getRouteSatelliteImageryUrl(routeGeoJson);
-        console.log(imageUrl);
+        insertNewSystemMessage("散歩道の人工衛星画像を取得完了。");
         // imageUrl を fetch して base64 に変換して explainSatelliteImagery に渡す
         const res = await fetch(imageUrl);
         const blob = await res.blob();
@@ -161,7 +160,6 @@ function App() {
           base64data = base64data
             .replace("data:application/octet-stream;", "data:image/png;")
             .replace("data:image/png;base64,", "");
-          console.log(base64data);
           const newNobushiExplain = await explainSatelliteImagery(
             value,
             base64data
@@ -240,7 +238,7 @@ function App() {
                   background: "rgba(0, 0, 0, 0.5)",
                 }}
               >
-                宇宙野武士の解説:
+                宇宙野武士の道語り:
               </h2>
               <div
                 style={{
@@ -315,8 +313,8 @@ function App() {
             background: "rgba(0, 0, 0, 0.5)",
             paddingTop: "10px",
             paddingLeft: "10px",
-            paddingRight: "20px",
-            paddingBottom: "10px",
+            paddingRight: "4px",
+            paddingBottom: "0px",
             zIndex: 9999,
           }}
         >
@@ -327,13 +325,26 @@ function App() {
               color: "white",
               gap: "10px",
               fontSize: "12px",
-              maxHeight: "300px",
+              maxHeight: "150px",
               overflowY: "scroll",
             }}
             className="systemMessage"
           >
             {systemMessage.map((message, index) => {
-              return <div key={index}>{message}</div>;
+              return (
+                <div
+                  key={index}
+                  style={{
+                    marginRight: "20px",
+                  }}
+                >
+                  {message}
+                  {index === systemMessage.length - 1 &&
+                    systemMessage[systemMessage.length - 1].endsWith("…") && (
+                      <span className="blinkingCursor" />
+                    )}
+                </div>
+              );
             })}
             <div style={{ height: "1px" }} ref={systemMessageEndRef} />
           </div>

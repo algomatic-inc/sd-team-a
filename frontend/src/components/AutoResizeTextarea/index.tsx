@@ -25,10 +25,6 @@ export const AutoResizeTextarea: React.FC<{
   }, [mounted, focusToEndOfText]);
 
   useEffect(() => {
-    focusToEndOfText();
-  }, [value, focusToEndOfText]);
-
-  useEffect(() => {
     setTimeout(() => {
       if (value.length > 0 && textareaRef.current) {
         textareaRef.current.style.height = "0px";
