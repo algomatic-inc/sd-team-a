@@ -264,7 +264,53 @@ function App() {
             display: "flex",
             flexDirection: "column",
             color: "white",
-            background: "rgba(0, 0, 0, 0.5)",
+            background: "rgba(0, 0, 0, 0.2)",
+            paddingTop: "10px",
+            paddingLeft: "10px",
+            paddingRight: "4px",
+            paddingBottom: "4px",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              color: "white",
+              gap: "10px",
+              maxHeight: "150px",
+              overflowY: "scroll",
+            }}
+            className="systemMessage"
+          >
+            {systemMessage.map((message, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    marginRight: "20px",
+                  }}
+                >
+                  {message}
+                  {index === systemMessage.length - 1 &&
+                    systemMessage[systemMessage.length - 1].endsWith("…") && (
+                      <span className="blinkingCursor" />
+                    )}
+                </div>
+              );
+            })}
+            <div style={{ height: "1px" }} ref={systemMessageEndRef} />
+          </div>
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            display: "flex",
+            flexDirection: "column",
+            color: "white",
+            background: "rgba(0, 0, 0, 0.2)",
             paddingLeft: "10px",
             paddingRight: "20px",
             paddingTop: "4px",
@@ -295,53 +341,6 @@ function App() {
                   `(${destinationLatLng[0]}, ${destinationLatLng[1]})`}
               </>
             )}
-          </div>
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            display: "flex",
-            flexDirection: "column",
-            color: "white",
-            background: "rgba(0, 0, 0, 0.5)",
-            paddingTop: "10px",
-            paddingLeft: "10px",
-            paddingRight: "4px",
-            paddingBottom: "4px",
-            zIndex: 9999,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              color: "white",
-              gap: "10px",
-              fontSize: "12px",
-              maxHeight: "150px",
-              overflowY: "scroll",
-            }}
-            className="systemMessage"
-          >
-            {systemMessage.map((message, index) => {
-              return (
-                <div
-                  key={index}
-                  style={{
-                    marginRight: "20px",
-                  }}
-                >
-                  {message}
-                  {index === systemMessage.length - 1 &&
-                    systemMessage[systemMessage.length - 1].endsWith("…") && (
-                      <span className="blinkingCursor" />
-                    )}
-                </div>
-              );
-            })}
-            <div style={{ height: "1px" }} ref={systemMessageEndRef} />
           </div>
         </div>
       </div>
