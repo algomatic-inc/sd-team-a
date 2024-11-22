@@ -20,16 +20,17 @@ import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
+  const [systemMessage, setSystemMessage] = useState(["散歩道の入力を待機中…"]);
   const [value, setValue] = useState("");
   const [departureString, setDepartureString] = useState("");
   const [destinationString, setDestinationString] = useState("");
-  const [systemMessage, setSystemMessage] = useState(["散歩道の入力を待機中…"]);
   const [departureLatLng, setDepartureLatLng] = useState<
     [number, number] | null
   >(null);
   const [destinationLatLng, setDestinationLatLng] = useState<
     [number, number] | null
   >(null);
+  const [requiredTime, setRequiredTime] = useState<number | null>(null);
   const [routeGeoJson, setRouteGeoJson] = useState<turf.AllGeoJSON | null>(
     null
   );
@@ -100,6 +101,9 @@ function App() {
             lat: destinationLatLng[0],
           }
         );
+        console.log(valhallaResult);
+        const time = valhallaResult.trip.summary.time;
+        setRequiredTime(time);
         const polyline = decodePolyline(valhallaResult.trip.legs[0].shape);
         setSystemMessage((prev) => [
           ...prev,
@@ -135,7 +139,14 @@ function App() {
 
   useEffect(() => {
     const doit = async () => {
-      if (routeGeoJson && !nobushiExplain) {
+      if (requiredTime && routeGeoJson && !nobushiExplain) {
+        if (requiredTime > 3600) {
+          setSystemMessage((prev) => [
+            ...prev,
+            "散歩道の長さが60分以上あります。別の散歩ルートを入力してください。",
+          ]);
+          return;
+        }
         setSystemMessage((prev) => [...prev, "散歩道の人工衛星画像を取得中…"]);
         const imageUrl = await getRouteSatelliteImageryUrl(routeGeoJson);
         console.log(imageUrl);
@@ -161,7 +172,7 @@ function App() {
       }
     };
     doit();
-  }, [nobushiExplain, routeGeoJson, value]);
+  }, [nobushiExplain, requiredTime, routeGeoJson, value]);
 
   return (
     <div
