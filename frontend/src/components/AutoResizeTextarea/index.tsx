@@ -51,7 +51,7 @@ export const AutoResizeTextarea: React.FC<{
       rows={value ? value.split("\n").length : 1}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder="人形町駅から秋葉原駅まで行きたい"
+      placeholder="人形町駅から秋葉原駅までの散歩道"
     />
   );
 };

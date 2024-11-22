@@ -229,6 +229,7 @@ function App() {
                   textAlign: "center",
                   color: "white",
                   margin: "10px 0 0",
+                  paddingTop: "10px",
                   background: "rgba(0, 0, 0, 0.5)",
                 }}
               >
@@ -236,7 +237,7 @@ function App() {
               </h2>
               <div
                 style={{
-                  width: "400px",
+                  width: "600px",
                   display: "flex",
                   flexDirection: "column",
                   color: "white",
@@ -246,6 +247,7 @@ function App() {
                   paddingRight: "10px",
                   paddingTop: "10px",
                   paddingBottom: "10px",
+                  fontSize: "1.4em",
                   zIndex: 10000,
                 }}
               >
