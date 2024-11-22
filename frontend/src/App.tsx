@@ -1,9 +1,4 @@
-import Map, {
-  AttributionControl,
-  GeolocateControl,
-  MapRef,
-  Source,
-} from "react-map-gl/maplibre";
+import Map, { AttributionControl, MapRef, Source } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as turf from "@turf/turf";
 import { useCallback, useEffect, useRef, useState } from "react";
