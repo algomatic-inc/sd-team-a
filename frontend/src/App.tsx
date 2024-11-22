@@ -15,8 +15,11 @@ import { getValhallaResponseJsonWithCache } from "./lib/osm/getValhalla";
 import { decodePolyline } from "./lib/osm/decodePolyline";
 import { Layer } from "react-map-gl";
 import { fitBoundsToGeoJson } from "./lib/fitBoundsToGeoJson";
+import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
+import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 
 function App() {
+  const mapRef = useRef<MapRef | null>(null);
   const [value, setValue] = useState("");
   const [departureString, setDepartureString] = useState("");
   const [destinationString, setDestinationString] = useState("");
@@ -30,7 +33,7 @@ function App() {
   const [routeGeoJson, setRouteGeoJson] = useState<turf.AllGeoJSON | null>(
     null
   );
-  const mapRef = useRef<MapRef | null>(null);
+  const [nobushiExplain, setNobushiExplain] = useState<string | null>(null);
 
   const onSubmit = useCallback(async () => {
     if (value === "") {
@@ -130,10 +133,9 @@ function App() {
     doit();
   }, [departureLatLng, destinationLatLng]);
 
-  /*
   useEffect(() => {
     const doit = async () => {
-      if (routeGeoJson) {
+      if (routeGeoJson && !nobushiExplain) {
         setSystemMessage((prev) => [...prev, "散歩道の人工衛星画像を取得中…"]);
         const imageUrl = await getRouteSatelliteImageryUrl(routeGeoJson);
         console.log(imageUrl);
@@ -145,19 +147,21 @@ function App() {
         reader.readAsDataURL(blob);
         reader.onloadend = async () => {
           let base64data = reader.result as string;
-          base64data = base64data.replace(
-            "data:application/octet-stream;",
-            "data:image/png;"
-          );
+          base64data = base64data
+            .replace("data:application/octet-stream;", "data:image/png;")
+            .replace("data:image/png;base64,", "");
           console.log(base64data);
-          const explain = await explainSatelliteImagery(value, base64data);
-          console.log(explain);
+          const newNobushiExplain = await explainSatelliteImagery(
+            value,
+            base64data
+          );
+          console.log(newNobushiExplain);
+          setNobushiExplain(newNobushiExplain);
         };
       }
     };
     doit();
-  }, [routeGeoJson, value]);
-  */
+  }, [nobushiExplain, routeGeoJson, value]);
 
   return (
     <div
@@ -206,6 +210,39 @@ function App() {
           <AutoResizeTextarea value={value} onChange={setValue} />
           <NobushiSubmitButton onSubmit={onSubmit} />
         </div>
+        {nobushiExplain && (
+          <>
+            <div>
+              <h2
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  margin: "10px 0 0",
+                  background: "rgba(0, 0, 0, 0.5)",
+                }}
+              >
+                宇宙野武士の解説:
+              </h2>
+              <div
+                style={{
+                  width: "400px",
+                  display: "flex",
+                  flexDirection: "column",
+                  color: "white",
+                  background: "rgba(0, 0, 0, 0.5)",
+                  marginTop: "0",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
+                  zIndex: 10000,
+                }}
+              >
+                {nobushiExplain}
+              </div>
+            </div>
+          </>
+        )}
         <div
           style={{
             position: "absolute",
