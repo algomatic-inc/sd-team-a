@@ -266,6 +266,7 @@ function App() {
             flexDirection: "column",
             color: "white",
             background: "rgba(0, 0, 0, 0.2)",
+            backdropFilter: "blur(2px)",
             paddingTop: "10px",
             paddingLeft: "10px",
             paddingRight: "4px",
@@ -279,7 +280,7 @@ function App() {
               flexDirection: "column",
               color: "white",
               gap: "10px",
-              maxHeight: "300px",
+              maxHeight: "250px",
               overflowY: "scroll",
             }}
             className="systemMessage"
@@ -312,6 +313,7 @@ function App() {
             flexDirection: "column",
             color: "white",
             background: "rgba(0, 0, 0, 0.2)",
+            backdropFilter: "blur(2px)",
             paddingLeft: "10px",
             paddingRight: "20px",
             paddingTop: "4px",
