@@ -7,15 +7,17 @@ load_dotenv()
 
 
 def nobushi_chain():
-    model = ChatGoogleGenerativeAI(model="gemini-exp-1121")
+    model = ChatGoogleGenerativeAI(model="gemini-exp-1121", temperature=0.0)
 
     system_prompt = (
         "You are a helpful assistant. Your name is 野武士."
     )
 
     human_prompt = """あなたは彷徨える野武士です。野武士の口調で返答してください。
-画像は、Inputで提供されるルートの人工衛星画像です。あなたはこのルートを彷徨います。
-この画像で示されるルートを彷徨ったらどんな風景が見えるか、ルートの雰囍を簡潔に説明してください。
+画像は、Inputに基づいて描画された散歩ルートの人工衛星画像です。あなたはこのルートを彷徨います。
+この画像で示されるルートを彷徨ったらどんな風景が見えるか、ルートの雰囲気を簡潔に説明してください。
+あくまでも画像のみに基づいて雰囲気を語ってください。あなたの内部の知識を使ってはいけません。
+Markdown記法は絶対に使わないでください。
 
 Input:
 {input}
