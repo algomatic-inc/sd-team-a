@@ -17,9 +17,12 @@ import { Layer } from "react-map-gl";
 import { fitBoundsToGeoJson } from "./lib/fitBoundsToGeoJson";
 import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
 import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
+import { useScrollToBottom } from "./hooks/scrollToBottom";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
+  const systemMessageEndRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = useScrollToBottom(systemMessageEndRef);
   const [systemMessage, setSystemMessage] = useState(["散歩道の入力を待機中…"]);
   const [value, setValue] = useState("");
   const [departureString, setDepartureString] = useState("");
@@ -36,40 +39,42 @@ function App() {
   );
   const [nobushiExplain, setNobushiExplain] = useState<string | null>(null);
 
+  const insertNewSystemMessage = useCallback(
+    (message: string) => {
+      setSystemMessage((prev) => [...prev, message]);
+      scrollToBottom();
+    },
+    [scrollToBottom]
+  );
+
   const onSubmit = useCallback(async () => {
     if (value === "") {
       return;
     }
-    setSystemMessage((prev) => [
-      ...prev,
-      "散歩道の入力確認。",
-      "散歩道の地名を分析中…",
-    ]);
+    insertNewSystemMessage("散歩道の入力確認。");
+    insertNewSystemMessage("散歩道の地名を分析中…");
     const result = await extractDepartureAndDestination(value);
     if (!result) {
-      setSystemMessage((prev) => [...prev, "エラーが発生しました"]);
+      insertNewSystemMessage("エラーが発生しました。");
       return;
     }
     // resultは改行区切りの文字列で、1行目が出発地、2行目が目的地
     // 3行目が空行の場合は許容する
     const lines = result.split("\n").filter((line) => line.trim() !== "");
     if (lines.length !== 2) {
-      setSystemMessage((prev) => [
-        ...prev,
-        "出発地と目的地を正しく入力してください",
-      ]);
+      insertNewSystemMessage("出発地と目的地を正しく入力してください。");
       return;
     }
     const [newDeparture, newDestination] = result.split("\n");
     setDepartureString(newDeparture);
     setDestinationString(newDestination);
-    setSystemMessage((prev) => [...prev, "散歩道の地名を分析完了。"]);
-  }, [value]);
+    insertNewSystemMessage("散歩道の地名を分析完了。");
+  }, [insertNewSystemMessage, value]);
 
   useEffect(() => {
     const doit = async () => {
       if (departureString.length > 0 && destinationString.length > 0) {
-        setSystemMessage((prev) => [...prev, "散歩道の位置情報をを取得中…"]);
+        insertNewSystemMessage("散歩道の位置情報をを取得中…");
         const departureResult = await getNominatimResponseJsonWithCache(
           departureString
         );
@@ -81,16 +86,16 @@ function App() {
           destinationResult[0].lat,
           destinationResult[0].lon,
         ]);
-        setSystemMessage((prev) => [...prev, "散歩道の位置情報を取得完了。"]);
+        insertNewSystemMessage("散歩道の位置情報を取得完了。");
       }
     };
     doit();
-  }, [departureString, destinationString]);
+  }, [departureString, destinationString, insertNewSystemMessage]);
 
   useEffect(() => {
     const doit = async () => {
       if (departureLatLng && destinationLatLng) {
-        setSystemMessage((prev) => [...prev, "散歩道の経路を探索中…"]);
+        insertNewSystemMessage("散歩道の経路を探索中…");
         const valhallaResult = await getValhallaResponseJsonWithCache(
           {
             lon: departureLatLng[1],
@@ -105,11 +110,8 @@ function App() {
         const time = valhallaResult.trip.summary.time;
         setRequiredTime(time);
         const polyline = decodePolyline(valhallaResult.trip.legs[0].shape);
-        setSystemMessage((prev) => [
-          ...prev,
-          "散歩道の経路を探索完了。",
-          "散歩道を表示中…",
-        ]);
+        insertNewSystemMessage("散歩道の経路を探索完了。");
+        insertNewSystemMessage("散歩道を表示中…");
         const newGeoJson = {
           type: "FeatureCollection",
           features: [
@@ -131,29 +133,27 @@ function App() {
           left: 100,
           right: 100,
         });
-        setSystemMessage((prev) => [...prev, "散歩道の表示完了。"]);
+        insertNewSystemMessage("散歩道の表示完了。");
       }
     };
     doit();
-  }, [departureLatLng, destinationLatLng]);
+  }, [departureLatLng, destinationLatLng, insertNewSystemMessage]);
 
   useEffect(() => {
     const doit = async () => {
       if (requiredTime && routeGeoJson && !nobushiExplain) {
         if (requiredTime > 3600) {
-          setSystemMessage((prev) => [
-            ...prev,
-            "散歩道の長さが60分以上あります。別の散歩ルートを入力してください。",
-          ]);
+          insertNewSystemMessage("散歩道の長さが60分以上あります。");
+          insertNewSystemMessage("別の散歩ルートを入力してください。");
           return;
         }
-        setSystemMessage((prev) => [...prev, "散歩道の人工衛星画像を取得中…"]);
+        insertNewSystemMessage("散歩道の人工衛星画像を取得中…");
         const imageUrl = await getRouteSatelliteImageryUrl(routeGeoJson);
         console.log(imageUrl);
         // imageUrl を fetch して base64 に変換して explainSatelliteImagery に渡す
         const res = await fetch(imageUrl);
         const blob = await res.blob();
-        setSystemMessage((prev) => [...prev, "散歩道の人工衛星画像を解析中…"]);
+        insertNewSystemMessage("散歩道の人工衛星画像を解析中…");
         const reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onloadend = async () => {
@@ -168,11 +168,18 @@ function App() {
           );
           console.log(newNobushiExplain);
           setNobushiExplain(newNobushiExplain);
+          insertNewSystemMessage("散歩道の人工衛星画像を解析完了。");
         };
       }
     };
     doit();
-  }, [nobushiExplain, requiredTime, routeGeoJson, value]);
+  }, [
+    insertNewSystemMessage,
+    nobushiExplain,
+    requiredTime,
+    routeGeoJson,
+    value,
+  ]);
 
   return (
     <div
@@ -320,11 +327,15 @@ function App() {
               color: "white",
               gap: "10px",
               fontSize: "12px",
+              maxHeight: "300px",
+              overflowY: "scroll",
             }}
+            className="systemMessage"
           >
             {systemMessage.map((message, index) => {
               return <div key={index}>{message}</div>;
             })}
+            <div style={{ height: "1px" }} ref={systemMessageEndRef} />
           </div>
         </div>
       </div>
