@@ -13,6 +13,7 @@ import { fitBoundsToGeoJson } from "./lib/fitBoundsToGeoJson";
 import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
 import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 import { useScrollToBottom } from "./hooks/scrollToBottom";
+import { NobushiAnimatedText } from "./components/NobushiAnimatedText";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
@@ -278,7 +279,7 @@ function App() {
               flexDirection: "column",
               color: "white",
               gap: "10px",
-              maxHeight: "150px",
+              maxHeight: "300px",
               overflowY: "scroll",
             }}
             className="systemMessage"
@@ -291,7 +292,7 @@ function App() {
                     marginRight: "20px",
                   }}
                 >
-                  {message}
+                  <NobushiAnimatedText text={message} />
                   {index === systemMessage.length - 1 &&
                     systemMessage[systemMessage.length - 1].endsWith("…") && (
                       <span className="blinkingCursor" />
