@@ -314,7 +314,7 @@ function App() {
             paddingTop: "10px",
             paddingLeft: "10px",
             paddingRight: "4px",
-            paddingBottom: "0px",
+            paddingBottom: "4px",
             zIndex: 9999,
           }}
         >
