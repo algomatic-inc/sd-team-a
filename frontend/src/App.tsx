@@ -144,10 +144,10 @@ function App() {
         }
         insertNewSystemMessage("散歩道の人工衛星画像を取得中…");
         const imageUrl = await getRouteSatelliteImageryUrl(routeGeoJson);
-        insertNewSystemMessage("散歩道の人工衛星画像を取得完了。");
         // imageUrl を fetch して base64 に変換して explainSatelliteImagery に渡す
         const res = await fetch(imageUrl);
         const blob = await res.blob();
+        insertNewSystemMessage("散歩道の人工衛星画像を取得完了。");
         insertNewSystemMessage("散歩道の人工衛星画像を解析中…");
         const reader = new FileReader();
         reader.readAsDataURL(blob);
