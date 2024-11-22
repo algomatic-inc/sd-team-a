@@ -367,8 +367,7 @@ function App() {
           mapStyle="https://unopengis.github.io/foil4g/stylejson/server.arcgisonline.com/world_imagery/style.json"
           attributionControl={false}
         >
-          <GeolocateControl />
-          <AttributionControl position="bottom-right" />
+          <AttributionControl position="top-right" />
           {routeGeoJson && (
             <>
               <Source id="route" type="geojson" data={routeGeoJson}>
