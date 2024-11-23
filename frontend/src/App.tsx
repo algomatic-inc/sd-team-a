@@ -237,7 +237,6 @@ function App() {
           justifyContent: systemMessages.length < 2 ? "center" : "flex-end",
           alignItems: systemMessages.length < 2 ? "center" : "flex-end",
           zIndex: 10000,
-          transition: "justify-content 0.5s, align-items 0.5s",
         }}
       >
         {systemMessages.length < 2 && <NobushiGreetings />}
