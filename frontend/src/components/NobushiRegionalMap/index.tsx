@@ -54,6 +54,7 @@ export const NobushiRegionalMap: React.FC<{
   return (
     <div
       style={{
+        position: "relative",
         height: "100%",
         width: "100%",
       }}
@@ -70,7 +71,7 @@ export const NobushiRegionalMap: React.FC<{
         mapStyle="https://unopengis.github.io/foil4g/stylejson/server.arcgisonline.com/world_imagery/style.json"
         attributionControl={false}
       >
-        <AttributionControl position="top-right" />
+        <AttributionControl position="bottom-right" />
         {geoJson && (
           <>
             <Source id={`region-${region}`} type="geojson" data={geoJson}>
@@ -98,6 +99,16 @@ export const NobushiRegionalMap: React.FC<{
           </>
         )}
       </Map>
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          color: "white",
+        }}
+      >
+        {region}
+      </div>
     </div>
   );
 };
