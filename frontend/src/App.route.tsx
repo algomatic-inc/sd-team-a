@@ -85,13 +85,13 @@ function App() {
     if (inputValue === "") {
       return;
     }
+    setInputValue("");
+    setChatMessages((prev) => [
+      ...prev,
+      { role: "user", type: "text", content: inputValue },
+    ]);
     if (firstInputValue === undefined) {
       setFirstInputValue(inputValue);
-      setInputValue("");
-      setChatMessages((prev) => [
-        ...prev,
-        { role: "user", type: "text", content: inputValue },
-      ]);
       insertNewSystemMessage("散歩道の入力確認。");
       insertNewSystemMessage("散歩道の地名を分析中…");
       const result = await extractDepartureAndDestination(inputValue);
@@ -111,10 +111,6 @@ function App() {
       setDestinationString(newDestination);
       insertNewSystemMessage("散歩道の地名を分析完了。");
     } else {
-      setChatMessages((prev) => [
-        ...prev,
-        { role: "user", type: "text", content: inputValue },
-      ]);
       // TODO: 過去のmessagesをGeminiに渡して、返答を取得する
     }
   }, [inputValue, firstInputValue, insertNewSystemMessage]);
