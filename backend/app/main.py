@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 import os
 from io import BytesIO
+import json
 from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -57,7 +58,7 @@ async def real_estate_info(request: Request):
 
     # 物件情報取得
     result_json = get_estate_info_by_coordinate(lat, lon)
-    return Response(content=result_json, media_type="application/json")
+    return Response(content=json.dumps(result_json), media_type="application/json")
 
 
 @app.post("/geojson_png")
