@@ -122,7 +122,7 @@ export const RelocatePage: React.FC = () => {
           <NobushiAutoResizeTextarea
             value={inputValue}
             onChange={setInputValue}
-            placeholder="静かなところがいいな"
+            placeholder="星空が綺麗に見えるところがいいな"
           />
           <NobushiSubmitButton onSubmit={onSubmit} />
         </div>
@@ -177,7 +177,7 @@ export const RelocatePage: React.FC = () => {
                     position: "absolute",
                     [idx < 2 ? "top" : "bottom"]: "0%",
                     right: "0%",
-                    color: "red",
+                    color: "white",
                   }}
                 >
                   <NobushiRelocateAreaSelector
