@@ -1,8 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
 
-import Map, { AttributionControl, MapRef } from "react-map-gl/maplibre";
-import "maplibre-gl/dist/maplibre-gl.css";
-
 // libs
 /*
 // osm
@@ -97,7 +94,7 @@ export const RelocatePage: React.FC = () => {
           margin: "0 auto 10px",
           display: "flex",
           flexDirection: "column",
-          justifyContent: systemMessages.length < 2 ? "center" : "flex-end",
+          justifyContent: systemMessages.length < 2 ? "flex-start" : "flex-end",
           alignItems: systemMessages.length < 2 ? "center" : "flex-end",
           zIndex: 10000,
         }}
@@ -153,7 +150,7 @@ export const RelocatePage: React.FC = () => {
             width: "100vw",
           }}
         >
-          {[area1, area2, area3, area4].map((area, idx) => {
+          {[area1, area2, area3, area4].map((area) => {
             return (
               <div
                 style={{
@@ -166,10 +163,8 @@ export const RelocatePage: React.FC = () => {
                 <div
                   style={{
                     position: "absolute",
-                    top: idx < 2 ? "0%" : "auto",
-                    bottom: idx >= 2 ? "0%" : "auto",
-                    left: idx % 2 === 0 ? "0%" : "auto",
-                    right: idx % 2 !== 0 ? "0%" : "auto",
+                    bottom: "0%",
+                    right: "0%",
                     color: "red",
                   }}
                 >
