@@ -4,6 +4,10 @@ PROJECT_ID := sd-team-nobushi
 
 all: deploy
 
+test:
+	@echo "Running tests..."
+	PYTHONPATH=$$(pwd) pytest --import-mode=importlib
+
 check-permissions:
 	@echo "Checking permissions..."
 	@gcloud config set project $(PROJECT_ID)
