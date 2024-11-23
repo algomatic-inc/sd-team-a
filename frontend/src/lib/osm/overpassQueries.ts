@@ -1,5 +1,41 @@
 export const overpassQueries = [
   {
+    region: "島根県松江市",
+    query: `
+  [out:json];
+  area["name"="島根県"]["admin_level"="4"];
+  relation["name"="松江市"]["admin_level"="7"];
+  out geom;
+  `,
+  },
+  {
+    region: "静岡県静岡市",
+    query: `
+  [out:json];
+  area["name"="静岡県"]["admin_level"="4"];
+  relation["name"="静岡市"]["admin_level"="7"];
+  out geom;
+  `,
+  },
+  {
+    region: "宮城県仙台市",
+    query: `
+  [out:json];
+  area["name"="宮城県"]["admin_level"="4"];
+  relation["name"="仙台市"]["admin_level"="7"];
+  out geom;
+  `,
+  },
+  {
+    region: "長野県長野市",
+    query: `
+  [out:json];
+  area["name"="長野県"]["admin_level"="4"];
+  relation["name"="長野市"]["admin_level"="7"];
+  out geom;
+  `,
+  },
+  {
     region: "北海道",
     query: `
   [out:json];
