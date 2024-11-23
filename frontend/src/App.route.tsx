@@ -127,7 +127,6 @@ function App() {
             lat: destinationLatLng[0],
           }
         );
-        console.log(JSON.stringify(valhallaResult, null, 2));
         const time = valhallaResult.trip.summary.time;
         setRequiredTime(time);
         const polyline = decodePolyline(valhallaResult.trip.legs[0].shape);
@@ -185,7 +184,6 @@ function App() {
             value,
             base64data
           );
-          console.log(newNobushiExplain);
           setNobushiExplain(newNobushiExplain);
           insertNewSystemMessage("散歩道の人工衛星画像を解析完了。");
         };
