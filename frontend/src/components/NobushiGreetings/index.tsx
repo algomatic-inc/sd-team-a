@@ -1,6 +1,8 @@
 import { NobushiAnimatedText } from "../NobushiAnimatedText";
 
-export const NobushiGreetings = () => {
+export const NobushiGreetings: React.FC<{
+  text?: string;
+}> = ({ text = "お手伝いできることはありますか？" }) => {
   return (
     <div
       style={{
@@ -13,7 +15,7 @@ export const NobushiGreetings = () => {
         userSelect: "none",
       }}
     >
-      <NobushiAnimatedText text="お手伝いできることはありますか？" />
+      <NobushiAnimatedText text={text} />
     </div>
   );
 };
