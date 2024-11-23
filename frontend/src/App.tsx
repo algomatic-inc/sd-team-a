@@ -48,6 +48,9 @@ function App() {
 
   // NobushiAutoResizeTextarea の入力状態
   const [inputValue, setInputValue] = useState("");
+  const [firstInputValue, setFirstInputValue] = useState<string | undefined>(
+    undefined
+  );
 
   // nominatim によるジオコーディングに必要な情報
   const [departureString, setDepartureString] = useState("");
@@ -82,6 +85,8 @@ function App() {
     if (inputValue === "") {
       return;
     }
+    setFirstInputValue(inputValue);
+    setInputValue("");
     setChatMessages((prev) => [
       ...prev,
       { role: "user", type: "text", content: inputValue },
@@ -184,6 +189,7 @@ function App() {
   useEffect(() => {
     const doit = async () => {
       if (
+        firstInputValue &&
         requiredTime &&
         routeGeoJson &&
         chatMessages.filter((m) => m.type === "explain").length === 0
@@ -208,7 +214,7 @@ function App() {
             .replace("data:application/octet-stream;", "data:image/png;")
             .replace("data:image/png;base64,", "");
           const newNobushiExplain = await explainSatelliteImagery(
-            inputValue,
+            firstInputValue,
             base64data
           );
           if (!newNobushiExplain) {
@@ -230,6 +236,7 @@ function App() {
     routeGeoJson,
     inputValue,
     chatMessages,
+    firstInputValue,
   ]);
 
   return (
