@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Map, {
   AttributionControl,
+  ControlPosition,
   Layer,
   MapRef,
   Source,
@@ -13,7 +14,8 @@ import { fitBoundsToGeoJson } from "../../lib/maplibre/fitBoundsToGeoJson";
 
 export const NobushiRegionalMap: React.FC<{
   region: string;
-}> = ({ region }) => {
+  attributionPosition: ControlPosition;
+}> = ({ region, attributionPosition }) => {
   const mapRef = useRef<MapRef | null>(null);
 
   const [geoJson, setGeoJson] = useState<GeoJSON.FeatureCollection | undefined>(
@@ -65,7 +67,7 @@ export const NobushiRegionalMap: React.FC<{
         mapStyle="https://unopengis.github.io/foil4g/stylejson/server.arcgisonline.com/world_imagery/style.json"
         attributionControl={false}
       >
-        <AttributionControl position="bottom-left" />
+        <AttributionControl position={attributionPosition} />
         {geoJson && (
           <>
             <Source id={`region-${region}`} type="geojson" data={geoJson}>

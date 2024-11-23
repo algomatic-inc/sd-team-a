@@ -94,7 +94,7 @@ export const RelocatePage: React.FC = () => {
           margin: "0 auto 10px",
           display: "flex",
           flexDirection: "column",
-          justifyContent: systemMessages.length < 2 ? "flex-start" : "flex-end",
+          justifyContent: systemMessages.length < 2 ? "center" : "flex-end",
           alignItems: systemMessages.length < 2 ? "center" : "flex-end",
           zIndex: 10000,
         }}
@@ -150,7 +150,7 @@ export const RelocatePage: React.FC = () => {
             width: "100vw",
           }}
         >
-          {[area1, area2, area3, area4].map((area) => {
+          {[area1, area2, area3, area4].map((area, idx) => {
             return (
               <div
                 style={{
@@ -159,11 +159,14 @@ export const RelocatePage: React.FC = () => {
                   width: "100%",
                 }}
               >
-                <NobushiRegionalMap region={area} />
+                <NobushiRegionalMap
+                  region={area}
+                  attributionPosition={idx < 2 ? "bottom-left" : "bottom-right"}
+                />
                 <div
                   style={{
                     position: "absolute",
-                    bottom: "0%",
+                    [idx < 2 ? "top" : "bottom"]: "0%",
                     right: "0%",
                     color: "red",
                   }}
