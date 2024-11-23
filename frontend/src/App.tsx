@@ -40,9 +40,12 @@ function App() {
   // NobushiAutoResizeTextarea の入力状態
   const [value, setValue] = useState("");
 
-  // valhallaによる経路探索に必要な情報
+  // nominatim によるジオコーディングに必要な情報
   const [departureString, setDepartureString] = useState("");
   const [destinationString, setDestinationString] = useState("");
+  // nominatim によるジオコーディングの結果
+  // かつ
+  // valhalla による経路探索に必要な情報
   const [departureLatLng, setDepartureLatLng] = useState<
     [number, number] | undefined
   >(undefined);
