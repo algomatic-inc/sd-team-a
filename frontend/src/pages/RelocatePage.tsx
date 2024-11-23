@@ -32,8 +32,6 @@ import { NobushiChatMessageLogs } from "../components/NobushiChatMessageLogs";
 import { NobushiRegionalMap } from "../components/NobushiRegionalMap";
 
 export const RelocatePage: React.FC = () => {
-  const mapRef = useRef<MapRef | null>(null);
-
   // systemMessages 関連
   const systemMessagesEndRef = useRef<HTMLDivElement>(null);
   const scrollToBottomOfSystemMessages =
@@ -50,12 +48,10 @@ export const RelocatePage: React.FC = () => {
   // NobushiAutoResizeTextarea の入力状態
   const [inputValue, setInputValue] = useState("");
 
-  const [inputAreas, setInputAreas] = useState<string[]>([
-    "静岡県",
-    "島根県",
-    "宮城県",
-    "長野県",
-  ]);
+  const [area1, setArea1] = useState<string>("島根県");
+  const [area2, setArea2] = useState<string>("静岡県");
+  const [area3, setArea3] = useState<string>("宮城県");
+  const [area4, setArea4] = useState<string>("長野県");
 
   // systemMessage に表示する内容を更新する関数
   const insertNewSystemMessage = useCallback(
@@ -107,7 +103,7 @@ export const RelocatePage: React.FC = () => {
         }}
       >
         {systemMessages.length < 2 && (
-          <NobushiGreetings text="地方移住をお手伝いします" />
+          <NobushiGreetings text="あなたの地方移住をお手伝いします" />
         )}
         <NobushiChatMessageLogs
           chatMessages={chatMessages}
@@ -128,7 +124,7 @@ export const RelocatePage: React.FC = () => {
           <NobushiAutoResizeTextarea
             value={inputValue}
             onChange={setInputValue}
-            placeholder="島根県に移住したい"
+            placeholder="静かなところがいいな"
           />
           <NobushiSubmitButton onSubmit={onSubmit} />
         </div>
@@ -145,37 +141,44 @@ export const RelocatePage: React.FC = () => {
           width: "100vw",
         }}
       >
-        {inputAreas.length === 0 ? (
-          <Map
-            ref={mapRef}
-            id="background"
-            initialViewState={{
-              latitude: 35.68385063,
-              longitude: 139.75397279,
-              zoom: 4,
-            }}
-            style={{ width: "100vw", height: "100vh" }}
-            mapStyle="https://unopengis.github.io/foil4g/stylejson/server.arcgisonline.com/world_imagery/style.json"
-            attributionControl={false}
-          >
-            <AttributionControl position="top-right" />
-          </Map>
-        ) : (
+        {
           // 2x2 のグリッドで地域ごとの地図を表示
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gridTemplateRows: "1fr 1fr",
-              height: "100vh",
-              width: "100vw",
-            }}
-          >
-            {inputAreas.map((area) => {
-              return <NobushiRegionalMap region={area} />;
-            })}
-          </div>
-        )}
+        }
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gridTemplateRows: "1fr 1fr",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          {[area1, area2, area3, area4].map((area, idx) => {
+            return (
+              <div
+                style={{
+                  position: "relative",
+                  height: "100%",
+                  width: "100%",
+                }}
+              >
+                <NobushiRegionalMap region={area} />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: idx < 2 ? "0%" : "auto",
+                    bottom: idx >= 2 ? "0%" : "auto",
+                    left: idx % 2 === 0 ? "0%" : "auto",
+                    right: idx % 2 !== 0 ? "0%" : "auto",
+                    color: "red",
+                  }}
+                >
+                  {area}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -52,13 +52,7 @@ export const NobushiRegionalMap: React.FC<{
   }, [geoJson]);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        height: "100%",
-        width: "100%",
-      }}
-    >
+    <>
       <Map
         ref={mapRef}
         id="background"
@@ -109,6 +103,6 @@ export const NobushiRegionalMap: React.FC<{
       >
         {region}
       </div>
-    </div>
+    </>
   );
 };
