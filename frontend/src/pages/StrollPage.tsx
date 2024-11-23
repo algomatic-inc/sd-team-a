@@ -10,31 +10,31 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 // libs
 // osm
-import { getNominatimResponseJsonWithCache } from "./lib/osm/getNominatim";
-import { getValhallaResponseJsonWithCache } from "./lib/osm/getValhalla";
-import { decodePolyline } from "./lib/osm/decodePolyline";
+import { getNominatimResponseJsonWithCache } from "../lib/osm/getNominatim";
+import { getValhallaResponseJsonWithCache } from "../lib/osm/getValhalla";
+import { decodePolyline } from "../lib/osm/decodePolyline";
 // maplibre
-import { fitBoundsToGeoJson } from "./lib/maplibre/fitBoundsToGeoJson";
+import { fitBoundsToGeoJson } from "../lib/maplibre/fitBoundsToGeoJson";
 // gemini
-import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
-import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
-import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
+import { extractDepartureAndDestination } from "../lib/gemini/extractDepartureAndDestination";
+import { explainSatelliteImagery } from "../lib/gemini/explainRouteImagery";
+import { getRouteSatelliteImageryUrl } from "../lib/nobushi/getRouteSatelliteImageryUrl";
 
 // types
-import { NobushiChatMessage } from "./types/NobushiChatMessage";
+import { NobushiChatMessage } from "../types/NobushiChatMessage";
 
 // hooks
-import { useScrollToBottom } from "./hooks/scrollToBottom";
+import { useScrollToBottom } from "../hooks/scrollToBottom";
 
 // components
-import { NobushiAutoResizeTextarea } from "./components/NobushiAutoResizeTextarea";
-import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
-import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAndDestination";
-import { NobushiGreetings } from "./components/NobushiGreetings";
-import { NobushiSystemMessages } from "./components/NobushiSystemMessages";
-import { NobushiChatMessageLogs } from "./components/NobushiChatMessageLogs";
+import { NobushiAutoResizeTextarea } from "../components/NobushiAutoResizeTextarea";
+import { NobushiSubmitButton } from "../components/NobushiSubmitButton";
+import { NobushiDepartureAndDestination } from "../components/NobushiDepartureAndDestination";
+import { NobushiGreetings } from "../components/NobushiGreetings";
+import { NobushiSystemMessages } from "../components/NobushiSystemMessages";
+import { NobushiChatMessageLogs } from "../components/NobushiChatMessageLogs";
 
-function App() {
+export const StrollPage = () => {
   const mapRef = useRef<MapRef | null>(null);
 
   // systemMessages 関連
@@ -357,6 +357,4 @@ function App() {
       </div>
     </div>
   );
-}
-
-export default App;
+};
