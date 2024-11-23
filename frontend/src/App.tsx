@@ -1,20 +1,30 @@
-import Map, { AttributionControl, MapRef, Source } from "react-map-gl/maplibre";
+import Map, {
+  AttributionControl,
+  MapRef,
+  Source,
+  Layer,
+} from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as turf from "@turf/turf";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+// components
+import { NobushiAnimatedText } from "./components/NobushiAnimatedText";
 import { NobushiAutoResizeTextarea } from "./components/NobushiAutoResizeTextarea";
 import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
+import { DepartureAndDestination } from "./components/DepartureAndDestination";
+
+// hooks
+import { useScrollToBottom } from "./hooks/scrollToBottom";
+
+// libs
 import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
 import { getNominatimResponseJsonWithCache } from "./lib/osm/getNominatim";
 import { getValhallaResponseJsonWithCache } from "./lib/osm/getValhalla";
 import { decodePolyline } from "./lib/osm/decodePolyline";
-import { Layer } from "react-map-gl";
 import { fitBoundsToGeoJson } from "./lib/fitBoundsToGeoJson";
 import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
 import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
-import { useScrollToBottom } from "./hooks/scrollToBottom";
-import { NobushiAnimatedText } from "./components/NobushiAnimatedText";
-import { DepartureAndDestination } from "./components/DepartureAndDestination";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
