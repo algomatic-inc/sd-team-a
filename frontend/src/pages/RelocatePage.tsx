@@ -48,8 +48,8 @@ export const RelocatePage: React.FC = () => {
 
   const [area1, setArea1] = useState<string>("島根県松江市");
   const [area2, setArea2] = useState<string>("静岡県静岡市");
-  const [area3, setArea3] = useState<string>("宮城県仙台市");
-  const [area4, setArea4] = useState<string>("長野県長野市");
+  const [area3, setArea3] = useState<string>("福岡県福岡市");
+  const [area4, setArea4] = useState<string>("沖縄県那覇市");
 
   // systemMessage に表示する内容を更新する関数
   const insertNewSystemMessage = useCallback(

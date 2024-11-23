@@ -36,6 +36,24 @@ export const overpassQueries = [
   `,
   },
   {
+    region: "福岡県福岡市",
+    query: `
+  [out:json];
+  area["name"="福岡県"]["admin_level"="4"];
+  relation["name"="福岡市"]["admin_level"="7"];
+  out geom;
+  `,
+  },
+  {
+    region: "沖縄県那覇市",
+    query: `
+  [out:json];
+  area["name"="沖縄県"]["admin_level"="4"];
+  relation["name"="那覇市"]["admin_level"="7"];
+  out geom;
+  `,
+  },
+  {
     region: "北海道",
     query: `
   [out:json];

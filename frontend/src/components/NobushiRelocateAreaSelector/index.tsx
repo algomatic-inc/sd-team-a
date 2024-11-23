@@ -49,6 +49,56 @@ const japanPrefectures = [
 ];
 
 const japanCapitalByPrefectures = [
+  "北海道札幌市",
+  "青森県青森市",
+  "岩手県盛岡市",
+  "宮城県仙台市",
+  "秋田県秋田市",
+  "山形県山形市",
+  "福島県福島市",
+  "茨城県水戸市",
+  "栃木県宇都宮市",
+  "群馬県前橋市",
+  "埼玉県さいたま市",
+  "千葉県千葉市",
+  "東京都東京都",
+  "神奈川県横浜市",
+  "新潟県新潟市",
+  "富山県富山市",
+  "石川県金沢市",
+  "福井県福井市",
+  "山梨県甲府市",
+  "長野県長野市",
+  "岐阜県岐阜市",
+  "静岡県静岡市",
+  "愛知県名古屋市",
+  "三重県津市",
+  "滋賀県大津市",
+  "京都府京都市",
+  "大阪府大阪市",
+  "兵庫県神戸市",
+  "奈良県奈良市",
+  "和歌山県和歌山市",
+  "鳥取県鳥取市",
+  "島根県松江市",
+  "岡山県岡山市",
+  "広島県広島市",
+  "山口県山口市",
+  "徳島県徳島市",
+  "香川県高松市",
+  "愛媛県松山市",
+  "高知県高知市",
+  "福岡県福岡市",
+  "佐賀県佐賀市",
+  "長崎県長崎市",
+  "熊本県熊本市",
+  "大分県大分市",
+  "宮崎県宮崎市",
+  "鹿児島県鹿児島市",
+  "沖縄県那覇市",
+];
+
+const japanCapitalByPrefecturesObjects = [
   {
     prefecture: "北海道",
     capital: "札幌市",
@@ -244,6 +294,7 @@ export const NobushiRelocateAreaSelector: React.FC<{
   currentArea: string;
   onSelect: (area: string) => void;
 }> = ({ currentAreas, currentArea, onSelect }) => {
+  console.log(currentAreas, currentArea);
   return (
     <div
       style={{
@@ -269,36 +320,29 @@ export const NobushiRelocateAreaSelector: React.FC<{
           <div>
             <select
               value={currentArea}
-              onChange={(e) => {
-                // 県庁所在地も含める
-                const prefecture = e.target.value;
-                const capital = japanCapitalByPrefectures.find(
-                  (capital) => capital.prefecture === prefecture
-                )?.capital;
-                if (capital) {
-                  onSelect(capital);
-                }
-              }}
+              onChange={(e) => onSelect(e.target.value)}
             >
-              {japanPrefectures.map((area, index) => (
-                <option
-                  key={`${area}-${index}`}
-                  value={area}
-                  selected={currentArea === area ? true : false}
-                  disabled={currentAreas.includes(area) ? true : false}
-                >
-                  {area}
-                </option>
-              ))}
-            </select>
-            <select>
-              {japanCapitalByPrefectures
-                .filter((prefecture) => prefecture.prefecture === currentArea)
-                .map((capital) => (
-                  <option key={capital.prefecture} value={capital.capital}>
-                    {capital.capital}
+              {japanCapitalByPrefectures.map((capitalByPrefecture, index) => {
+                console.log(capitalByPrefecture, currentArea);
+                return (
+                  <option
+                    key={`${capitalByPrefecture}-${index}`}
+                    value={capitalByPrefecture}
+                    selected={
+                      currentArea.includes(capitalByPrefecture) ? true : false
+                    }
+                    disabled={
+                      currentAreas.filter((area) =>
+                        japanPrefectures.includes(area)
+                      ).length > 0
+                        ? true
+                        : false
+                    }
+                  >
+                    {capitalByPrefecture}
                   </option>
-                ))}
+                );
+              })}
             </select>
           </div>
         </div>
