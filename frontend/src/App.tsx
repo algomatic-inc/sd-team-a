@@ -3,7 +3,7 @@ import { StrollPage } from "./pages/StrollPage";
 import { RelocatePage } from "./pages/RelocatePage";
 
 function App() {
-  const [mode, setMode] = useState<"relocate" | "stroll">("relocate");
+  const [mode, setMode] = useState<"relocate" | "stroll">("stroll");
 
   // URLの#mode=xxxからmodeを決める
   useEffect(() => {

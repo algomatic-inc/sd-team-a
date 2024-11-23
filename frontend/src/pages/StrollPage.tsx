@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import Map, {
   AttributionControl,
   MapRef,
@@ -6,7 +8,6 @@ import Map, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as turf from "@turf/turf";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 // libs
 // osm
@@ -282,7 +283,9 @@ export const StrollPage = () => {
           zIndex: 10000,
         }}
       >
-        {systemMessages.length < 2 && <NobushiGreetings />}
+        {systemMessages.length < 2 && (
+          <NobushiGreetings text="野武士が散歩道をご案内します" />
+        )}
         <NobushiChatMessageLogs
           chatMessages={chatMessages}
           chatMessagesEndRef={chatMessagesEndRef}

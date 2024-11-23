@@ -3,7 +3,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export const NobushiAutoResizeTextarea: React.FC<{
   value: string;
   onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+  placeholder?: string;
+}> = ({
+  value,
+  onChange,
+  placeholder = "人形町駅から秋葉原駅までの散歩道",
+}) => {
   const [mounted, setMounted] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -47,7 +52,7 @@ export const NobushiAutoResizeTextarea: React.FC<{
       rows={value ? value.split("\n").length : 1}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder="人形町駅から秋葉原駅までの散歩道"
+      placeholder={placeholder}
     />
   );
 };
