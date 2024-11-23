@@ -36,13 +36,13 @@ function App() {
 
   // systemMessage 関連
   const systemMessageEndRef = useRef<HTMLDivElement>(null);
-  const scrollToBottom = useScrollToBottom(systemMessageEndRef);
+  const scrollToBottomOfSystemMessage = useScrollToBottom(systemMessageEndRef);
   const [systemMessages, setSystemMessages] = useState([
     "散歩道の入力を待機中…",
   ]);
 
   // NobushiAutoResizeTextarea の入力状態
-  const [value, setValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   // nominatim によるジオコーディングに必要な情報
   const [departureString, setDepartureString] = useState("");
@@ -72,19 +72,19 @@ function App() {
   const insertNewSystemMessage = useCallback(
     (message: string) => {
       setSystemMessages((prev) => [...prev, message]);
-      scrollToBottom();
+      scrollToBottomOfSystemMessage();
     },
-    [scrollToBottom]
+    [scrollToBottomOfSystemMessage]
   );
 
   // valueからdepartureStringとdestinationStringを抽出する
   const onSubmit = useCallback(async () => {
-    if (value === "") {
+    if (inputValue === "") {
       return;
     }
     insertNewSystemMessage("散歩道の入力確認。");
     insertNewSystemMessage("散歩道の地名を分析中…");
-    const result = await extractDepartureAndDestination(value);
+    const result = await extractDepartureAndDestination(inputValue);
     if (!result) {
       insertNewSystemMessage("エラーが発生しました。");
       return;
@@ -100,7 +100,7 @@ function App() {
     setDepartureString(newDeparture);
     setDestinationString(newDestination);
     insertNewSystemMessage("散歩道の地名を分析完了。");
-  }, [insertNewSystemMessage, value]);
+  }, [insertNewSystemMessage, inputValue]);
 
   // departureStringとdestinationStringが入力されたら、
   // nominatimでジオコーディングを行い、
@@ -200,7 +200,7 @@ function App() {
             .replace("data:application/octet-stream;", "data:image/png;")
             .replace("data:image/png;base64,", "");
           const newNobushiExplain = await explainSatelliteImagery(
-            value,
+            inputValue,
             base64data
           );
           setNobushiExplain(newNobushiExplain ? newNobushiExplain : undefined);
@@ -214,7 +214,7 @@ function App() {
     nobushiExplain,
     requiredTime,
     routeGeoJson,
-    value,
+    inputValue,
   ]);
 
   return (
@@ -253,7 +253,10 @@ function App() {
             background: "rgba(255, 255, 255, 0.8)",
           }}
         >
-          <NobushiAutoResizeTextarea value={value} onChange={setValue} />
+          <NobushiAutoResizeTextarea
+            value={inputValue}
+            onChange={setInputValue}
+          />
           <NobushiSubmitButton onSubmit={onSubmit} />
         </div>
       </div>
