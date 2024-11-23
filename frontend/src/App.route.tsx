@@ -71,6 +71,7 @@ function App() {
     [scrollToBottom]
   );
 
+  // valueからdepartureStringとdestinationStringを抽出する
   const onSubmit = useCallback(async () => {
     if (value === "") {
       return;
@@ -95,6 +96,9 @@ function App() {
     insertNewSystemMessage("散歩道の地名を分析完了。");
   }, [insertNewSystemMessage, value]);
 
+  // departureStringとdestinationStringが入力されたら、
+  // nominatimでジオコーディングを行い、
+  // departureLatLngとdestinationLatLngを入力する
   useEffect(() => {
     const doit = async () => {
       if (departureString.length > 0 && destinationString.length > 0) {
@@ -116,6 +120,9 @@ function App() {
     doit();
   }, [departureString, destinationString, insertNewSystemMessage]);
 
+  // departureLatLngとdestinationLatLngが入力されたら、
+  // valhallaで経路探索を行い、
+  // requiredTimeとrouteGeoJsonを入力する
   useEffect(() => {
     const doit = async () => {
       if (departureLatLng && destinationLatLng) {
@@ -161,6 +168,9 @@ function App() {
     doit();
   }, [departureLatLng, destinationLatLng, insertNewSystemMessage]);
 
+  // requiredTimeとrouteGeoJsonが入力されたら、
+  // routeGeoJsonを使って散歩道の人工衛星画像を取得し、
+  // explainSatelliteImageryに渡してnobushiExplainを入力する
   useEffect(() => {
     const doit = async () => {
       if (requiredTime && routeGeoJson && !nobushiExplain) {
