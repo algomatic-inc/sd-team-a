@@ -274,6 +274,7 @@ function App() {
       >
         <Map
           ref={mapRef}
+          id="background"
           initialViewState={{
             latitude: 35.68385063,
             longitude: 139.75397279,
