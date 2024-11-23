@@ -29,6 +29,7 @@ import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
 import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAndDestination";
 import { NobushiGreetings } from "./components/NobushiGreetings";
 import { NobushiSystemMessages } from "./components/NobushiSystemMessages";
+import { NobushiExplain } from "./components/NobushiExplain";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
@@ -63,7 +64,9 @@ function App() {
   );
 
   // 宇宙野武士の道語り
-  const [nobushiExplain, setNobushiExplain] = useState<string | null>(null);
+  const [nobushiExplain, setNobushiExplain] = useState<string | undefined>(
+    undefined
+  );
 
   // systemMessage に表示する内容を更新する関数
   const insertNewSystemMessage = useCallback(
@@ -200,7 +203,7 @@ function App() {
             value,
             base64data
           );
-          setNobushiExplain(newNobushiExplain);
+          setNobushiExplain(newNobushiExplain ? newNobushiExplain : undefined);
           insertNewSystemMessage("散歩道の人工衛星画像を解析完了。");
         };
       }
@@ -251,41 +254,7 @@ function App() {
           <NobushiAutoResizeTextarea value={value} onChange={setValue} />
           <NobushiSubmitButton onSubmit={onSubmit} />
         </div>
-        {nobushiExplain && (
-          <>
-            <div>
-              <h2
-                style={{
-                  textAlign: "center",
-                  color: "white",
-                  margin: "10px 0 0",
-                  paddingTop: "10px",
-                  background: "rgba(0, 0, 0, 0.5)",
-                }}
-              >
-                宇宙野武士の道語り:
-              </h2>
-              <div
-                style={{
-                  width: "600px",
-                  display: "flex",
-                  flexDirection: "column",
-                  color: "white",
-                  background: "rgba(0, 0, 0, 0.5)",
-                  marginTop: "0",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
-                  fontSize: "1.4em",
-                  zIndex: 10000,
-                }}
-              >
-                {nobushiExplain}
-              </div>
-            </div>
-          </>
-        )}
+        <NobushiExplain explain={nobushiExplain} />
         <NobushiSystemMessages
           systemMessages={systemMessages}
           systemMessageEndRef={systemMessageEndRef}
