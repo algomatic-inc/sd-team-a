@@ -24,11 +24,11 @@ import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImag
 import { useScrollToBottom } from "./hooks/scrollToBottom";
 
 // components
-import { NobushiAnimatedText } from "./components/NobushiAnimatedText";
 import { NobushiAutoResizeTextarea } from "./components/NobushiAutoResizeTextarea";
 import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
 import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAndDestination";
 import { NobushiGreetings } from "./components/NobushiGreetings";
+import { NobushiSystemMessages } from "./components/NobushiSystemMessages";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
@@ -36,7 +36,9 @@ function App() {
   // systemMessage 関連
   const systemMessageEndRef = useRef<HTMLDivElement>(null);
   const scrollToBottom = useScrollToBottom(systemMessageEndRef);
-  const [systemMessage, setSystemMessage] = useState(["散歩道の入力を待機中…"]);
+  const [systemMessages, setSystemMessages] = useState([
+    "散歩道の入力を待機中…",
+  ]);
 
   // NobushiAutoResizeTextarea の入力状態
   const [value, setValue] = useState("");
@@ -66,7 +68,7 @@ function App() {
   // systemMessage に表示する内容を更新する関数
   const insertNewSystemMessage = useCallback(
     (message: string) => {
-      setSystemMessage((prev) => [...prev, message]);
+      setSystemMessages((prev) => [...prev, message]);
       scrollToBottom();
     },
     [scrollToBottom]
@@ -284,53 +286,10 @@ function App() {
             </div>
           </>
         )}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            display: "flex",
-            flexDirection: "column",
-            color: "white",
-            background: "rgba(0, 0, 0, 0.2)",
-            backdropFilter: "blur(2px)",
-            paddingTop: "10px",
-            paddingLeft: "10px",
-            paddingRight: "4px",
-            paddingBottom: "4px",
-            zIndex: 9999,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              color: "white",
-              gap: "10px",
-              maxHeight: "250px",
-              overflowY: "scroll",
-            }}
-            className="systemMessage"
-          >
-            {systemMessage.map((message, index) => {
-              return (
-                <div
-                  key={index}
-                  style={{
-                    marginRight: "20px",
-                  }}
-                >
-                  <NobushiAnimatedText text={message} />
-                  {index === systemMessage.length - 1 &&
-                    systemMessage[systemMessage.length - 1].endsWith("…") && (
-                      <span className="blinkingCursor" />
-                    )}
-                </div>
-              );
-            })}
-            <div style={{ height: "1px" }} ref={systemMessageEndRef} />
-          </div>
-        </div>
+        <NobushiSystemMessages
+          systemMessages={systemMessages}
+          systemMessageEndRef={systemMessageEndRef}
+        />
         <NobushiDepartureAndDestination
           departure={departureString}
           departureLatLng={departureLatLng}
