@@ -37,7 +37,7 @@ import { NobushiChatMessageLogs } from "./components/NobushiChatMessageLogs";
 function App() {
   const mapRef = useRef<MapRef | null>(null);
 
-  // systemMessage 関連
+  // systemMessages 関連
   const systemMessagesEndRef = useRef<HTMLDivElement>(null);
   const scrollToBottomOfSystemMessages =
     useScrollToBottom(systemMessagesEndRef);
@@ -45,6 +45,7 @@ function App() {
     "散歩道の入力を待機中…",
   ]);
 
+  // chatMessages 関連
   const chatMessagesEndRef = useRef<HTMLDivElement>(null);
   const scrollToBottomOfChatMessages = useScrollToBottom(chatMessagesEndRef);
   const [chatMessages, setChatMessages] = useState<NobushiChatMessage[]>([]);
