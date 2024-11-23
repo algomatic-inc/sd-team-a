@@ -35,7 +35,7 @@ export const RelocatePage: React.FC = () => {
   const scrollToBottomOfSystemMessages =
     useScrollToBottom(systemMessagesEndRef);
   const [systemMessages, setSystemMessages] = useState([
-    "移住先地域の希望条件の入力を待機中…",
+    "各地域でピンを立ててください…",
   ]);
 
   // chatMessages 関連
