@@ -18,13 +18,16 @@ import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAnd
 import { useScrollToBottom } from "./hooks/scrollToBottom";
 
 // libs
-import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
+// osm
 import { getNominatimResponseJsonWithCache } from "./lib/osm/getNominatim";
 import { getValhallaResponseJsonWithCache } from "./lib/osm/getValhalla";
 import { decodePolyline } from "./lib/osm/decodePolyline";
-import { fitBoundsToGeoJson } from "./lib/fitBoundsToGeoJson";
-import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
+// maplibre
+import { fitBoundsToGeoJson } from "./lib/maplibre/fitBoundsToGeoJson";
+// gemini
+import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
 import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
+import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
