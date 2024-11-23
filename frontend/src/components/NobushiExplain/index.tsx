@@ -12,7 +12,8 @@ export const NobushiExplain: React.FC<{ explain?: string }> = ({ explain }) => {
                 color: "white",
                 margin: "10px 0 0",
                 paddingTop: "10px",
-                background: "rgba(0, 0, 0, 0.5)",
+                background: "rgba(0, 0, 0, 0.3)",
+                backdropFilter: "blur(2px)",
               }}
             >
               宇宙野武士の道語り:
@@ -23,7 +24,7 @@ export const NobushiExplain: React.FC<{ explain?: string }> = ({ explain }) => {
                 display: "flex",
                 flexDirection: "column",
                 color: "white",
-                background: "rgba(0, 0, 0, 0.5)",
+                background: "rgba(0, 0, 0, 0.3)",
                 backdropFilter: "blur(2px)",
                 marginTop: "0",
                 marginBottom: "10px",
