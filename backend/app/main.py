@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langserve import add_routes
 
+from lib.penetrator import get_estate_info_by_coordinate
 from lib.geojson_to_img import geojson_to_img
 from lib.chain.nobushi import nobushi_chain
 
@@ -35,6 +36,28 @@ app.add_middleware(
 @app.get('/')
 def read_root():
     return {'Nobushi': 'Hello World!'}
+
+
+@app.get("/real_estate_info")
+@app.post("/real_estate_info")
+async def real_estate_info(request: Request):
+    """
+    物件情報を取得するAPI
+    """
+    if request.method == "POST":
+        req_json = await request.json()
+        lat = req_json.get("lat", "")
+        lon = req_json.get("lon", "")
+    else:
+        lat = request.query_params.get("lat", "")
+        lon = request.query_params.get("lon", "")
+
+    if not lat or not lon:
+        return {"error": "lat, lon are required"}
+
+    # 物件情報取得
+    result_json = get_estate_info_by_coordinate(lat, lon)
+    return Response(content=result_json, media_type="application/json")
 
 
 @app.post("/geojson_png")
