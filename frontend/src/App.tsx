@@ -20,6 +20,9 @@ import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAnd
 import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
 
+// types
+import { NobushiChatMessage } from "./types/NobushiChatMessage";
+
 // hooks
 import { useScrollToBottom } from "./hooks/scrollToBottom";
 
@@ -29,7 +32,7 @@ import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
 import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAndDestination";
 import { NobushiGreetings } from "./components/NobushiGreetings";
 import { NobushiSystemMessages } from "./components/NobushiSystemMessages";
-import { NobushiExplain } from "./components/NobushiExplain";
+import { NobushiChatMessageLogs } from "./components/NobushiChatMessageLogs";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
@@ -40,6 +43,8 @@ function App() {
   const [systemMessages, setSystemMessages] = useState([
     "散歩道の入力を待機中…",
   ]);
+
+  const [chatMessages, setChatMessages] = useState<NobushiChatMessage[]>([]);
 
   // NobushiAutoResizeTextarea の入力状態
   const [inputValue, setInputValue] = useState("");
@@ -63,11 +68,6 @@ function App() {
     null
   );
 
-  // 宇宙野武士の道語り
-  const [nobushiExplain, setNobushiExplain] = useState<string | undefined>(
-    undefined
-  );
-
   // systemMessage に表示する内容を更新する関数
   const insertNewSystemMessage = useCallback(
     (message: string) => {
@@ -82,6 +82,10 @@ function App() {
     if (inputValue === "") {
       return;
     }
+    setChatMessages((prev) => [
+      ...prev,
+      { role: "user", type: "text", content: inputValue },
+    ]);
     insertNewSystemMessage("散歩道の入力確認。");
     insertNewSystemMessage("散歩道の地名を分析中…");
     const result = await extractDepartureAndDestination(inputValue);
@@ -176,10 +180,14 @@ function App() {
 
   // requiredTimeとrouteGeoJsonが入力されたら、
   // routeGeoJsonを使って散歩道の人工衛星画像を取得し、
-  // explainSatelliteImageryに渡してnobushiExplainを入力する
+  // explainSatelliteImageryに渡してAIの返答を取得する
   useEffect(() => {
     const doit = async () => {
-      if (requiredTime && routeGeoJson && !nobushiExplain) {
+      if (
+        requiredTime &&
+        routeGeoJson &&
+        chatMessages.filter((m) => m.type === "explain").length === 0
+      ) {
         if (requiredTime > 3600) {
           insertNewSystemMessage("散歩道の長さが60分以上あります。");
           insertNewSystemMessage("別の散歩ルートを入力してください。");
@@ -203,7 +211,14 @@ function App() {
             inputValue,
             base64data
           );
-          setNobushiExplain(newNobushiExplain ? newNobushiExplain : undefined);
+          if (!newNobushiExplain) {
+            insertNewSystemMessage("エラーが発生しました。");
+            return;
+          }
+          setChatMessages((prev) => [
+            ...prev,
+            { role: "ai", type: "explain", content: newNobushiExplain },
+          ]);
           insertNewSystemMessage("散歩道の人工衛星画像を解析完了。");
         };
       }
@@ -211,10 +226,10 @@ function App() {
     doit();
   }, [
     insertNewSystemMessage,
-    nobushiExplain,
     requiredTime,
     routeGeoJson,
     inputValue,
+    chatMessages,
   ]);
 
   return (
@@ -240,7 +255,7 @@ function App() {
         }}
       >
         {systemMessages.length < 2 && <NobushiGreetings />}
-        <NobushiExplain explain={nobushiExplain} />
+        <NobushiChatMessageLogs messages={chatMessages} />
         <div
           style={{
             display: "flex",
