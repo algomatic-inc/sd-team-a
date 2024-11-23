@@ -8,15 +8,6 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import * as turf from "@turf/turf";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// components
-import { NobushiAnimatedText } from "./components/NobushiAnimatedText";
-import { NobushiAutoResizeTextarea } from "./components/NobushiAutoResizeTextarea";
-import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
-import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAndDestination";
-
-// hooks
-import { useScrollToBottom } from "./hooks/scrollToBottom";
-
 // libs
 // osm
 import { getNominatimResponseJsonWithCache } from "./lib/osm/getNominatim";
@@ -28,6 +19,16 @@ import { fitBoundsToGeoJson } from "./lib/maplibre/fitBoundsToGeoJson";
 import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
 import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
+
+// hooks
+import { useScrollToBottom } from "./hooks/scrollToBottom";
+
+// components
+import { NobushiAnimatedText } from "./components/NobushiAnimatedText";
+import { NobushiAutoResizeTextarea } from "./components/NobushiAutoResizeTextarea";
+import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
+import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAndDestination";
+import { NobushiGreetings } from "./components/NobushiGreetings";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
@@ -232,19 +233,7 @@ function App() {
           zIndex: 10000,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            fontSize: "30px",
-            fontWeight: 600,
-            color: "white",
-            marginBottom: "20px",
-            userSelect: "none",
-          }}
-        >
-          <NobushiAnimatedText text="お手伝いできることはありますか？" />
-        </div>
+        <NobushiGreetings />
         <div
           style={{
             display: "flex",
