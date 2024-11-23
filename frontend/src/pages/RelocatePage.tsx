@@ -184,7 +184,7 @@ export const RelocatePage: React.FC = () => {
                     currentAreas={[area1, area2, area3, area4]}
                     currentArea={area}
                     onSelect={(newArea) => {
-                      console.log(newArea);
+                      console.log(newArea, idx);
                       switch (idx) {
                         case 0:
                           setArea1(newArea);

@@ -24,7 +24,7 @@ export const NobushiRegionalMap: React.FC<{
 
   useEffect(() => {
     const doit = async () => {
-      if (region.length > 0 && geoJson === undefined) {
+      if (region.length > 0) {
         const query = overpassQueries.find((q) => q.region === region)?.query;
         if (!query) {
           console.error(`query not found for region: ${region}`);
@@ -40,7 +40,7 @@ export const NobushiRegionalMap: React.FC<{
       }
     };
     doit();
-  });
+  }, [region]);
 
   useEffect(() => {
     if (geoJson) {

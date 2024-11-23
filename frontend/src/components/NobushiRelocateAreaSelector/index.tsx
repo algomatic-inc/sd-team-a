@@ -81,7 +81,7 @@ export const NobushiRelocateAreaSelector: React.FC<{
           >
             {japanPrefectures.map((area, index) => (
               <option
-                key={index}
+                key={`${area}-${index}`}
                 value={area}
                 selected={currentArea === area ? true : false}
                 disabled={currentAreas.includes(area) ? true : false}
