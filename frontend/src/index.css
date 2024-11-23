@@ -39,15 +39,15 @@ textarea:focus {
   outline: none;
 }
 
-.systemMessage::-webkit-scrollbar {
+.systemMessages::-webkit-scrollbar {
   width: 6px;
 }
 
-.systemMessage::-webkit-scrollbar-track {
+.systemMessages::-webkit-scrollbar-track {
   display: none;
 }
 
-.systemMessage::-webkit-scrollbar-thumb {
+.systemMessages::-webkit-scrollbar-thumb {
   border-radius: 0.75rem;
   border: 10px solid rgba(255, 255, 255, 0.5);
 }

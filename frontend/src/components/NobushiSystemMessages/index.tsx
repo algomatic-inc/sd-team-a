@@ -31,7 +31,7 @@ export const NobushiSystemMessages: React.FC<{
           maxHeight: "250px",
           overflowY: "scroll",
         }}
-        className="systemMessage"
+        className="systemMessages"
       >
         {systemMessages.map((message, index) => {
           return (

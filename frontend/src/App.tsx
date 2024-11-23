@@ -38,8 +38,9 @@ function App() {
   const mapRef = useRef<MapRef | null>(null);
 
   // systemMessage 関連
-  const systemMessageEndRef = useRef<HTMLDivElement>(null);
-  const scrollToBottomOfSystemMessage = useScrollToBottom(systemMessageEndRef);
+  const systemMessagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollToBottomOfSystemMessages =
+    useScrollToBottom(systemMessagesEndRef);
   const [systemMessages, setSystemMessages] = useState([
     "散歩道の入力を待機中…",
   ]);
@@ -77,9 +78,9 @@ function App() {
   const insertNewSystemMessage = useCallback(
     (message: string) => {
       setSystemMessages((prev) => [...prev, message]);
-      scrollToBottomOfSystemMessage();
+      scrollToBottomOfSystemMessages();
     },
-    [scrollToBottomOfSystemMessage]
+    [scrollToBottomOfSystemMessages]
   );
 
   // chatMessage に表示する内容を更新する関数
@@ -282,8 +283,8 @@ function App() {
       >
         {systemMessages.length < 2 && <NobushiGreetings />}
         <NobushiChatMessageLogs
-          messages={chatMessages}
-          messagesEndRef={chatMessagesEndRef}
+          chatMessages={chatMessages}
+          chatMessagesEndRef={chatMessagesEndRef}
         />
         <div
           style={{
@@ -307,7 +308,7 @@ function App() {
       <>
         <NobushiSystemMessages
           systemMessages={systemMessages}
-          systemMessageEndRef={systemMessageEndRef}
+          systemMessageEndRef={systemMessagesEndRef}
         />
         <NobushiDepartureAndDestination
           departure={departureString}

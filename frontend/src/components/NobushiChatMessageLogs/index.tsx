@@ -3,10 +3,10 @@ import { NobushiChatMessage } from "../../types/NobushiChatMessage";
 import { NobushiAnimatedText } from "../NobushiAnimatedText";
 
 export const NobushiChatMessageLogs: React.FC<{
-  messages?: NobushiChatMessage[];
-  messagesEndRef: React.RefObject<HTMLDivElement>;
-}> = ({ messages, messagesEndRef }) => {
-  if (!messages || messages.length === 0) {
+  chatMessages?: NobushiChatMessage[];
+  chatMessagesEndRef: React.RefObject<HTMLDivElement>;
+}> = ({ chatMessages, chatMessagesEndRef }) => {
+  if (!chatMessages || chatMessages.length === 0) {
     return null;
   }
   return (
@@ -31,7 +31,7 @@ export const NobushiChatMessageLogs: React.FC<{
       }}
       className="chatMessages"
     >
-      {messages.map((message, index) => {
+      {chatMessages.map((message, index) => {
         if (message.role === "ai") {
           return (
             <div
@@ -60,7 +60,7 @@ export const NobushiChatMessageLogs: React.FC<{
           );
         }
       })}
-      <div style={{ height: "1px" }} ref={messagesEndRef} />
+      <div style={{ height: "1px" }} ref={chatMessagesEndRef} />
     </div>
   );
 };
