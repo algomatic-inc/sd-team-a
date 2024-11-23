@@ -39,7 +39,7 @@ export const NobushiAutoResizeTextarea: React.FC<{
       ref={textareaRef}
       style={{
         fontSize: "1.5em",
-        width: "330px",
+        width: "410px",
         resize: "none",
         border: "none",
         background: "transparent",

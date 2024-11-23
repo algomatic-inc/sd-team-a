@@ -1,19 +1,19 @@
 import React from "react";
 import { NobushiChatMessage } from "../../types/NobushiChatMessage";
+import { NobushiAnimatedText } from "../NobushiAnimatedText";
 
 export const NobushiChatMessageLogs: React.FC<{
   messages?: NobushiChatMessage[];
-}> = ({ messages }) => {
-  if (!messages) {
-    return null;
-  }
-  if (messages.length === 0) {
+  messagesEndRef: React.RefObject<HTMLDivElement>;
+}> = ({ messages, messagesEndRef }) => {
+  if (!messages || messages.length === 0) {
     return null;
   }
   return (
     <div
       style={{
         width: "24vw",
+        maxHeight: "660px",
         display: "flex",
         flexDirection: "column",
         color: "white",
@@ -27,44 +27,40 @@ export const NobushiChatMessageLogs: React.FC<{
         paddingBottom: "10px",
         fontSize: "1.2em",
         zIndex: 10000,
+        overflowY: "scroll",
       }}
+      className="chatMessages"
     >
       {messages.map((message, index) => {
-        return (
-          <div
-            key={index}
-            style={{
-              display: "flex",
-              flexDirection: message.role === "user" ? "row-reverse" : "row",
-              marginBottom: "14px",
-            }}
-          >
+        if (message.role === "ai") {
+          return (
             <div
+              key={index}
               style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: message.role === "user" ? "flex-end" : "flex-start",
-                width: "100%",
+                width: "80%",
+                marginBottom: "14px",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems:
-                    message.role === "user" ? "flex-end" : "flex-start",
-                  padding: "2px",
-                  color: "white",
-                  borderRadius: "10px",
-                  maxWidth: "75%",
-                }}
-              >
-                {message.content}
-              </div>
+              <NobushiAnimatedText text={message.content} />
             </div>
-          </div>
-        );
+          );
+        } else {
+          return (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                marginLeft: "20%",
+                flexDirection: "row-reverse",
+                marginBottom: "14px",
+              }}
+            >
+              <span>{message.content}</span>
+            </div>
+          );
+        }
       })}
+      <div style={{ height: "1px" }} ref={messagesEndRef} />
     </div>
   );
 };

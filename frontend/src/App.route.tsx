@@ -44,6 +44,8 @@ function App() {
     "散歩道の入力を待機中…",
   ]);
 
+  const chatMessagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollToBottomOfChatMessages = useScrollToBottom(chatMessagesEndRef);
   const [chatMessages, setChatMessages] = useState<NobushiChatMessage[]>([]);
 
   // NobushiAutoResizeTextarea の入力状態
@@ -80,16 +82,22 @@ function App() {
     [scrollToBottomOfSystemMessage]
   );
 
+  // chatMessage に表示する内容を更新する関数
+  const insertNewChatMessage = useCallback(
+    (message: NobushiChatMessage) => {
+      setChatMessages((prev) => [...prev, message]);
+      scrollToBottomOfChatMessages();
+    },
+    [scrollToBottomOfChatMessages]
+  );
+
   // valueからdepartureStringとdestinationStringを抽出する
   const onSubmit = useCallback(async () => {
     if (inputValue === "") {
       return;
     }
     setInputValue("");
-    setChatMessages((prev) => [
-      ...prev,
-      { role: "user", type: "text", content: inputValue },
-    ]);
+    insertNewChatMessage({ role: "user", type: "text", content: inputValue });
     if (firstInputValue === undefined) {
       setFirstInputValue(inputValue);
       insertNewSystemMessage("散歩道の入力確認。");
@@ -113,7 +121,12 @@ function App() {
     } else {
       // TODO: 過去のmessagesをGeminiに渡して、返答を取得する
     }
-  }, [inputValue, firstInputValue, insertNewSystemMessage]);
+  }, [
+    inputValue,
+    insertNewChatMessage,
+    firstInputValue,
+    insertNewSystemMessage,
+  ]);
 
   // departureStringとdestinationStringが入力されたら、
   // nominatimでジオコーディングを行い、
@@ -225,10 +238,11 @@ function App() {
             insertNewSystemMessage("エラーが発生しました。");
             return;
           }
-          setChatMessages((prev) => [
-            ...prev,
-            { role: "ai", type: "explain", content: newNobushiExplain },
-          ]);
+          insertNewChatMessage({
+            role: "ai",
+            type: "explain",
+            content: newNobushiExplain,
+          });
           insertNewSystemMessage("散歩道の人工衛星画像を解析完了。");
         };
       }
@@ -241,6 +255,7 @@ function App() {
     inputValue,
     chatMessages,
     firstInputValue,
+    insertNewChatMessage,
   ]);
 
   return (
@@ -266,7 +281,10 @@ function App() {
         }}
       >
         {systemMessages.length < 2 && <NobushiGreetings />}
-        <NobushiChatMessageLogs messages={chatMessages} />
+        <NobushiChatMessageLogs
+          messages={chatMessages}
+          messagesEndRef={chatMessagesEndRef}
+        />
         <div
           style={{
             display: "flex",

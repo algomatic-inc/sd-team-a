@@ -52,6 +52,19 @@ textarea:focus {
   border: 10px solid rgba(255, 255, 255, 0.5);
 }
 
+.chatMessages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chatMessages::-webkit-scrollbar-track {
+  display: none;
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  border-radius: 0.75rem;
+  border: 10px solid rgba(255, 255, 255, 0.5);
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
