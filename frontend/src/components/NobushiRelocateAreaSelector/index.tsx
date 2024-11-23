@@ -313,7 +313,7 @@ export const NobushiRelocateAreaSelector: React.FC<{
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "10px",
+            gap: "4px",
           }}
         >
           <div>現在の地域</div>

@@ -100,16 +100,6 @@ export const NobushiRegionalMap: React.FC<{
           </>
         )}
       </Map>
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          color: "white",
-        }}
-      >
-        {region}
-      </div>
     </>
   );
 };
