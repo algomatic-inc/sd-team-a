@@ -66,7 +66,7 @@ export const NobushiRegionalMap: React.FC<{
           longitude: 139.75397279,
           zoom: 4,
         }}
-        style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100%", height: "100%" }}
         mapStyle="https://unopengis.github.io/foil4g/stylejson/server.arcgisonline.com/world_imagery/style.json"
         attributionControl={false}
       >

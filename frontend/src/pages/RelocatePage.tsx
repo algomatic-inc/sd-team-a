@@ -172,17 +172,7 @@ export const RelocatePage: React.FC = () => {
             }}
           >
             {inputAreas.map((area) => {
-              return (
-                <div
-                  key={area}
-                  style={{
-                    height: "100%",
-                    width: "100%",
-                  }}
-                >
-                  <NobushiRegionalMap region={area} />
-                </div>
-              );
+              return <NobushiRegionalMap region={area} />;
             })}
           </div>
         )}
