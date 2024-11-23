@@ -14,6 +14,7 @@ import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImag
 import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 import { useScrollToBottom } from "./hooks/scrollToBottom";
 import { NobushiAnimatedText } from "./components/NobushiAnimatedText";
+import { DepartureAndDestination } from "./components/DepartureAndDestination";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
@@ -24,11 +25,11 @@ function App() {
   const [departureString, setDepartureString] = useState("");
   const [destinationString, setDestinationString] = useState("");
   const [departureLatLng, setDepartureLatLng] = useState<
-    [number, number] | null
-  >(null);
+    [number, number] | undefined
+  >(undefined);
   const [destinationLatLng, setDestinationLatLng] = useState<
-    [number, number] | null
-  >(null);
+    [number, number] | undefined
+  >(undefined);
   const [requiredTime, setRequiredTime] = useState<number | null>(null);
   const [routeGeoJson, setRouteGeoJson] = useState<turf.AllGeoJSON | null>(
     null
@@ -198,6 +199,8 @@ function App() {
       >
         <div
           style={{
+            display: "flex",
+            justifyContent: "center",
             fontSize: "30px",
             fontWeight: 600,
             color: "white",
@@ -205,14 +208,14 @@ function App() {
             userSelect: "none",
           }}
         >
-          宇宙野武士に散歩道を聞く
+          <NobushiAnimatedText text="お手伝いできることはありますか？" />
         </div>
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-between",
             alignItems: "center",
-            width: "400px",
+            width: "30vw",
             height: "auto",
             padding: "10px",
             borderRadius: "24px",
@@ -304,48 +307,12 @@ function App() {
             <div style={{ height: "1px" }} ref={systemMessageEndRef} />
           </div>
         </div>
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            display: "flex",
-            flexDirection: "column",
-            color: "white",
-            background: "rgba(0, 0, 0, 0.2)",
-            backdropFilter: "blur(2px)",
-            paddingLeft: "10px",
-            paddingRight: "20px",
-            paddingTop: "4px",
-            paddingBottom: "4px",
-            zIndex: 10000,
-          }}
-        >
-          <div>
-            出発地:{" "}
-            {departureString.length === 0 ? (
-              "不明"
-            ) : (
-              <>
-                {departureString}
-                {departureLatLng &&
-                  `(${departureLatLng[0]}, ${departureLatLng[1]})`}
-              </>
-            )}
-          </div>
-          <div>
-            目的地:{" "}
-            {destinationString.length === 0 ? (
-              "不明"
-            ) : (
-              <>
-                {destinationString}
-                {destinationLatLng &&
-                  `(${destinationLatLng[0]}, ${destinationLatLng[1]})`}
-              </>
-            )}
-          </div>
-        </div>
+        <DepartureAndDestination
+          departure={departureString}
+          departureLatLng={departureLatLng}
+          destination={destinationString}
+          destinationLatLng={destinationLatLng}
+        />
       </div>
       <div
         style={{

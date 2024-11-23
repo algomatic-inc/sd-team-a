@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 export const NobushiAnimatedText = ({
   text,
-  interval = 10,
+  interval = 50,
 }: {
   text: string;
   interval?: number;
@@ -22,18 +22,22 @@ export const NobushiAnimatedText = ({
 
   return (
     <>
-      {text.split("").map((char, index) => (
-        <span
-          key={index}
-          style={{
-            display: "inline-block",
-            opacity: index < visibleChars ? 1 : 0,
-            transition: "opacity 0.01s ease-in-out",
-          }}
-        >
-          {char}
-        </span>
-      ))}
+      {text.split("").map((char, index) => {
+        return (
+          <React.Fragment key={index}>
+            <span
+              style={{
+                display: index < visibleChars ? "inline-block" : "none",
+                opacity: index < visibleChars ? 1 : 0,
+                transition: "opacity 0.06s ease-out",
+              }}
+            >
+              {char}
+            </span>
+          </React.Fragment>
+        );
+      })}
+      {visibleChars < text.length && <span className="blinkingCursor" />}
     </>
   );
 };
