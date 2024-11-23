@@ -20,6 +20,9 @@ import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAnd
 import { explainSatelliteImagery } from "./lib/gemini/explainRouteImagery";
 import { getRouteSatelliteImageryUrl } from "./lib/nobushi/getRouteSatelliteImageryUrl";
 
+// types
+import { NobushiChatMessage } from "./types/NobushiChatMessage";
+
 // hooks
 import { useScrollToBottom } from "./hooks/scrollToBottom";
 
@@ -29,7 +32,7 @@ import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
 import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAndDestination";
 import { NobushiGreetings } from "./components/NobushiGreetings";
 import { NobushiSystemMessages } from "./components/NobushiSystemMessages";
-import { NobushiExplain } from "./components/NobushiExplain";
+import { NobushiChatMessageLogs } from "./components/NobushiChatMessageLogs";
 
 function App() {
   const mapRef = useRef<MapRef | null>(null);
@@ -41,8 +44,13 @@ function App() {
     "散歩道の入力を待機中…",
   ]);
 
+  const [chatMessages, setChatMessages] = useState<NobushiChatMessage[]>([]);
+
   // NobushiAutoResizeTextarea の入力状態
   const [inputValue, setInputValue] = useState("");
+  const [firstInputValue, setFirstInputValue] = useState<string | undefined>(
+    undefined
+  );
 
   // nominatim によるジオコーディングに必要な情報
   const [departureString, setDepartureString] = useState("");
@@ -63,11 +71,6 @@ function App() {
     null
   );
 
-  // 宇宙野武士の道語り
-  const [nobushiExplain, setNobushiExplain] = useState<string | undefined>(
-    undefined
-  );
-
   // systemMessage に表示する内容を更新する関数
   const insertNewSystemMessage = useCallback(
     (message: string) => {
@@ -82,25 +85,39 @@ function App() {
     if (inputValue === "") {
       return;
     }
-    insertNewSystemMessage("散歩道の入力確認。");
-    insertNewSystemMessage("散歩道の地名を分析中…");
-    const result = await extractDepartureAndDestination(inputValue);
-    if (!result) {
-      insertNewSystemMessage("エラーが発生しました。");
-      return;
+    if (firstInputValue === undefined) {
+      setFirstInputValue(inputValue);
+      setInputValue("");
+      setChatMessages((prev) => [
+        ...prev,
+        { role: "user", type: "text", content: inputValue },
+      ]);
+      insertNewSystemMessage("散歩道の入力確認。");
+      insertNewSystemMessage("散歩道の地名を分析中…");
+      const result = await extractDepartureAndDestination(inputValue);
+      if (!result) {
+        insertNewSystemMessage("エラーが発生しました。");
+        return;
+      }
+      // resultは改行区切りの文字列で、1行目が出発地、2行目が目的地
+      // 3行目が空行の場合は許容する
+      const lines = result.split("\n").filter((line) => line.trim() !== "");
+      if (lines.length !== 2) {
+        insertNewSystemMessage("出発地と目的地を正しく入力してください。");
+        return;
+      }
+      const [newDeparture, newDestination] = result.split("\n");
+      setDepartureString(newDeparture);
+      setDestinationString(newDestination);
+      insertNewSystemMessage("散歩道の地名を分析完了。");
+    } else {
+      setChatMessages((prev) => [
+        ...prev,
+        { role: "user", type: "text", content: inputValue },
+      ]);
+      // TODO: 過去のmessagesをGeminiに渡して、返答を取得する
     }
-    // resultは改行区切りの文字列で、1行目が出発地、2行目が目的地
-    // 3行目が空行の場合は許容する
-    const lines = result.split("\n").filter((line) => line.trim() !== "");
-    if (lines.length !== 2) {
-      insertNewSystemMessage("出発地と目的地を正しく入力してください。");
-      return;
-    }
-    const [newDeparture, newDestination] = result.split("\n");
-    setDepartureString(newDeparture);
-    setDestinationString(newDestination);
-    insertNewSystemMessage("散歩道の地名を分析完了。");
-  }, [insertNewSystemMessage, inputValue]);
+  }, [inputValue, firstInputValue, insertNewSystemMessage]);
 
   // departureStringとdestinationStringが入力されたら、
   // nominatimでジオコーディングを行い、
@@ -176,10 +193,15 @@ function App() {
 
   // requiredTimeとrouteGeoJsonが入力されたら、
   // routeGeoJsonを使って散歩道の人工衛星画像を取得し、
-  // explainSatelliteImageryに渡してnobushiExplainを入力する
+  // explainSatelliteImageryに渡してAIの返答を取得する
   useEffect(() => {
     const doit = async () => {
-      if (requiredTime && routeGeoJson && !nobushiExplain) {
+      if (
+        firstInputValue &&
+        requiredTime &&
+        routeGeoJson &&
+        chatMessages.filter((m) => m.type === "explain").length === 0
+      ) {
         if (requiredTime > 3600) {
           insertNewSystemMessage("散歩道の長さが60分以上あります。");
           insertNewSystemMessage("別の散歩ルートを入力してください。");
@@ -200,10 +222,17 @@ function App() {
             .replace("data:application/octet-stream;", "data:image/png;")
             .replace("data:image/png;base64,", "");
           const newNobushiExplain = await explainSatelliteImagery(
-            inputValue,
+            firstInputValue,
             base64data
           );
-          setNobushiExplain(newNobushiExplain ? newNobushiExplain : undefined);
+          if (!newNobushiExplain) {
+            insertNewSystemMessage("エラーが発生しました。");
+            return;
+          }
+          setChatMessages((prev) => [
+            ...prev,
+            { role: "ai", type: "explain", content: newNobushiExplain },
+          ]);
           insertNewSystemMessage("散歩道の人工衛星画像を解析完了。");
         };
       }
@@ -211,10 +240,11 @@ function App() {
     doit();
   }, [
     insertNewSystemMessage,
-    nobushiExplain,
     requiredTime,
     routeGeoJson,
     inputValue,
+    chatMessages,
+    firstInputValue,
   ]);
 
   return (
@@ -240,7 +270,7 @@ function App() {
         }}
       >
         {systemMessages.length < 2 && <NobushiGreetings />}
-        <NobushiExplain explain={nobushiExplain} />
+        <NobushiChatMessageLogs messages={chatMessages} />
         <div
           style={{
             display: "flex",

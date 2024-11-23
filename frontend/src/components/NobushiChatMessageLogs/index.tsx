@@ -30,7 +30,6 @@ export const NobushiChatMessageLogs: React.FC<{
       }}
     >
       {messages.map((message, index) => {
-        console.log(message.content);
         return (
           <div
             key={index}
