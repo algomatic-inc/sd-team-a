@@ -7,7 +7,7 @@ load_dotenv()
 
 
 def nobushi_chain():
-    model = ChatGoogleGenerativeAI(model="gemini-exp-1121", temperature=0.0)
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.0)
 
     system_prompt = (
         "You are a helpful assistant. Your name is 野武士."

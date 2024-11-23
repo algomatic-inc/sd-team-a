@@ -4,7 +4,7 @@ import { AIMessage } from "@langchain/core/messages";
 
 export const extractDepartureAndDestination = async (input: string) => {
   const remoteRunnable = new RemoteRunnable({
-    url: "https://api.nobushi.yuiseki.net/gemini/",
+    url: "https://api.nobushi.yuiseki.net/google/",
   });
 
   const promptTemplate = new PromptTemplate({
