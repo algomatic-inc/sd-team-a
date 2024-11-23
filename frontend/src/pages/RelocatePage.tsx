@@ -161,7 +161,15 @@ export const RelocatePage: React.FC = () => {
               >
                 <NobushiRegionalMap
                   region={area}
-                  attributionPosition={idx < 2 ? "bottom-left" : "bottom-right"}
+                  attributionPosition={
+                    idx === 0
+                      ? "bottom-left"
+                      : idx === 1
+                      ? "bottom-right"
+                      : idx === 2
+                      ? "bottom-left"
+                      : "bottom-left"
+                  }
                 />
                 <div
                   style={{
