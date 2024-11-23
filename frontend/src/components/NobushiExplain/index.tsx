@@ -19,17 +19,19 @@ export const NobushiExplain: React.FC<{ explain?: string }> = ({ explain }) => {
             </h2>
             <div
               style={{
-                width: "600px",
+                width: "24vw",
                 display: "flex",
                 flexDirection: "column",
                 color: "white",
                 background: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(2px)",
                 marginTop: "0",
+                marginBottom: "10px",
                 paddingLeft: "10px",
                 paddingRight: "10px",
                 paddingTop: "10px",
                 paddingBottom: "10px",
-                fontSize: "1.4em",
+                fontSize: "1.2em",
                 zIndex: 10000,
               }}
             >

@@ -19,7 +19,7 @@ export const NobushiDepartureAndDestination: React.FC<{
         paddingRight: "20px",
         paddingTop: "4px",
         paddingBottom: "4px",
-        zIndex: 10000,
+        zIndex: 9999,
       }}
     >
       <div>

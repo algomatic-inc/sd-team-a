@@ -227,24 +227,26 @@ function App() {
       <div
         style={{
           position: "absolute",
-          top: 0,
+          bottom: systemMessages.length < 2 ? 0 : "4vh",
+          right: systemMessages.length < 2 ? 0 : "3vh",
           height: "100%",
           width: "100%",
           margin: "auto",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: systemMessages.length < 2 ? "center" : "flex-end",
+          alignItems: systemMessages.length < 2 ? "center" : "flex-end",
           zIndex: 10000,
         }}
       >
-        <NobushiGreetings />
+        {systemMessages.length < 2 && <NobushiGreetings />}
+        <NobushiExplain explain={nobushiExplain} />
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            width: "30vw",
+            width: "24vw",
             height: "auto",
             padding: "10px",
             borderRadius: "24px",
@@ -254,7 +256,8 @@ function App() {
           <NobushiAutoResizeTextarea value={value} onChange={setValue} />
           <NobushiSubmitButton onSubmit={onSubmit} />
         </div>
-        <NobushiExplain explain={nobushiExplain} />
+      </div>
+      <>
         <NobushiSystemMessages
           systemMessages={systemMessages}
           systemMessageEndRef={systemMessageEndRef}
@@ -265,7 +268,7 @@ function App() {
           destination={destinationString}
           destinationLatLng={destinationLatLng}
         />
-      </div>
+      </>
       <div
         style={{
           height: "100vh",
