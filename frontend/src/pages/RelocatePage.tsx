@@ -27,6 +27,7 @@ import { NobushiGreetings } from "../components/NobushiGreetings";
 import { NobushiSystemMessages } from "../components/NobushiSystemMessages";
 import { NobushiChatMessageLogs } from "../components/NobushiChatMessageLogs";
 import { NobushiRegionalMap } from "../components/NobushiRegionalMap";
+import { NobushiRelocateAreaSelector } from "../components/NobushiRelocateAreaSelector";
 
 export const RelocatePage: React.FC = () => {
   // systemMessages 関連
@@ -87,9 +88,9 @@ export const RelocatePage: React.FC = () => {
       <div
         style={{
           position: "absolute",
-          top: systemMessages.length < 2 ? 0 : 0,
+          top: systemMessages.length < 2 ? "50%" : 0,
           left: systemMessages.length < 2 ? 0 : "75vw",
-          height: systemMessages.length < 2 ? "100%" : "98vh",
+          height: systemMessages.length < 2 ? "5vh" : "98vh",
           width: systemMessages.length < 2 ? "100%" : "24vw",
           margin: "0 auto 10px",
           display: "flex",
@@ -179,7 +180,27 @@ export const RelocatePage: React.FC = () => {
                     color: "red",
                   }}
                 >
-                  {area}
+                  <NobushiRelocateAreaSelector
+                    currentAreas={[area1, area2, area3, area4]}
+                    currentArea={area}
+                    onSelect={(newArea) => {
+                      console.log(newArea);
+                      switch (idx) {
+                        case 0:
+                          setArea1(newArea);
+                          break;
+                        case 1:
+                          setArea2(newArea);
+                          break;
+                        case 2:
+                          setArea3(newArea);
+                          break;
+                        case 3:
+                          setArea4(newArea);
+                          break;
+                      }
+                    }}
+                  />
                 </div>
               </div>
             );

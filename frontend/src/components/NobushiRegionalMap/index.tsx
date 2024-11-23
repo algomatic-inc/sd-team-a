@@ -70,7 +70,12 @@ export const NobushiRegionalMap: React.FC<{
         <AttributionControl position={attributionPosition} />
         {geoJson && (
           <>
-            <Source id={`region-${region}`} type="geojson" data={geoJson}>
+            <Source
+              key={`region-${region}-source`}
+              id={`region-${region}`}
+              type="geojson"
+              data={geoJson}
+            >
               <Layer
                 {...{
                   id: `region-${region}-line`,
