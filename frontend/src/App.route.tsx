@@ -227,11 +227,11 @@ function App() {
       <div
         style={{
           position: "absolute",
-          bottom: systemMessages.length < 2 ? 0 : "4vh",
-          right: systemMessages.length < 2 ? 0 : "3vh",
-          height: "100%",
-          width: "100%",
-          margin: "auto",
+          top: systemMessages.length < 2 ? 0 : 0,
+          left: systemMessages.length < 2 ? 0 : "75vw",
+          height: systemMessages.length < 2 ? "100%" : "98vh",
+          width: systemMessages.length < 2 ? "100%" : "24vw",
+          margin: "0 auto 10px",
           display: "flex",
           flexDirection: "column",
           justifyContent: systemMessages.length < 2 ? "center" : "flex-end",
