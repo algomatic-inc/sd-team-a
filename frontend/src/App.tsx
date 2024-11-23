@@ -12,7 +12,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { NobushiAnimatedText } from "./components/NobushiAnimatedText";
 import { NobushiAutoResizeTextarea } from "./components/NobushiAutoResizeTextarea";
 import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
-import { DepartureAndDestination } from "./components/DepartureAndDestination";
+import { NobushiDepartureAndDestination } from "./components/NobushiDepartureAndDestination";
 
 // hooks
 import { useScrollToBottom } from "./hooks/scrollToBottom";
@@ -317,7 +317,7 @@ function App() {
             <div style={{ height: "1px" }} ref={systemMessageEndRef} />
           </div>
         </div>
-        <DepartureAndDestination
+        <NobushiDepartureAndDestination
           departure={departureString}
           departureLatLng={departureLatLng}
           destination={destinationString}

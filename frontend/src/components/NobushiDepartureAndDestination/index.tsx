@@ -1,4 +1,4 @@
-export const DepartureAndDestination: React.FC<{
+export const NobushiDepartureAndDestination: React.FC<{
   departure?: string;
   departureLatLng?: [number, number];
   destination?: string;
