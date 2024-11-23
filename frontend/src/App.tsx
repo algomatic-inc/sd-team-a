@@ -2,7 +2,7 @@ import Map, { AttributionControl, MapRef, Source } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as turf from "@turf/turf";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AutoResizeTextarea } from "./components/AutoResizeTextarea";
+import { NobushiAutoResizeTextarea } from "./components/NobushiAutoResizeTextarea";
 import { NobushiSubmitButton } from "./components/NobushiSubmitButton";
 import { extractDepartureAndDestination } from "./lib/gemini/extractDepartureAndDestination";
 import { getNominatimResponseJsonWithCache } from "./lib/osm/getNominatim";
@@ -222,7 +222,7 @@ function App() {
             background: "rgba(255, 255, 255, 0.8)",
           }}
         >
-          <AutoResizeTextarea value={value} onChange={setValue} />
+          <NobushiAutoResizeTextarea value={value} onChange={setValue} />
           <NobushiSubmitButton onSubmit={onSubmit} />
         </div>
         {nobushiExplain && (
