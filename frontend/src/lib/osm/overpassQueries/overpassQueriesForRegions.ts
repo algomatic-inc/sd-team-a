@@ -1,6 +1,7 @@
-export const overpassQueriesForCapitals = [
+export const overpassQueriesForRegions = [
   {
     region: "北海道札幌市",
+    capital: true,
     query: `
   [out:json];
   area["name"="北海道"]["admin_level"="4"];
@@ -10,6 +11,7 @@ export const overpassQueriesForCapitals = [
   },
   {
     region: "青森県青森市",
+    capital: true,
     query: `
   [out:json];
   area["name"="青森県"]["admin_level"="4"];
@@ -19,6 +21,7 @@ export const overpassQueriesForCapitals = [
   },
   {
     region: "岩手県盛岡市",
+    capital: true,
     query: `
   [out:json];
   area["name"="岩手県"]["admin_level"="4"];
@@ -28,6 +31,7 @@ export const overpassQueriesForCapitals = [
   },
   {
     region: "宮城県仙台市",
+    capital: true,
     query: `
   [out:json];
   area["name"="宮城県"]["admin_level"="4"];
@@ -35,9 +39,9 @@ export const overpassQueriesForCapitals = [
   out geom;
   `,
   },
-
   {
     region: "秋田県秋田市",
+    capital: true,
     query: `
 [out:json];
 area["name"="秋田県"]["admin_level"="4"];
@@ -47,6 +51,7 @@ out geom;
   },
   {
     region: "山形県山形市",
+    capital: true,
     query: `
 [out:json];
 area["name"="山形県"]["admin_level"="4"];
@@ -56,6 +61,7 @@ out geom;
   },
   {
     region: "福島県福島市",
+    capital: true,
     query: `
 [out:json];
 area["name"="福島県"]["admin_level"="4"];
@@ -65,6 +71,7 @@ out geom;
   },
   {
     region: "茨城県水戸市",
+    capital: true,
     query: `
 [out:json];
 area["name"="茨城県"]["admin_level"="4"];
@@ -74,6 +81,7 @@ out geom;
   },
   {
     region: "栃木県宇都宮市",
+    capital: true,
     query: `
 [out:json];
 area["name"="栃木県"]["admin_level"="4"];
@@ -83,6 +91,7 @@ out geom;
   },
   {
     region: "群馬県前橋市",
+    capital: true,
     query: `
 [out:json];
 area["name"="群馬県"]["admin_level"="4"];
@@ -92,6 +101,7 @@ out geom;
   },
   {
     region: "埼玉県さいたま市",
+    capital: true,
     query: `
 [out:json];
 area["name"="埼玉県"]["admin_level"="4"];
@@ -101,6 +111,7 @@ out geom;
   },
   {
     region: "千葉県千葉市",
+    capital: true,
     query: `
 [out:json];
 area["name"="千葉県"]["admin_level"="4"];
@@ -110,6 +121,7 @@ out geom;
   },
   {
     region: "東京都東京都",
+    capital: true,
     query: `
 [out:json];
 area["name"="東京都"]["admin_level"="4"];
@@ -119,6 +131,7 @@ out geom;
   },
   {
     region: "神奈川県横浜市",
+    capital: true,
     query: `
 [out:json];
 area["name"="神奈川県"]["admin_level"="4"];
@@ -128,6 +141,7 @@ out geom;
   },
   {
     region: "新潟県新潟市",
+    capital: true,
     query: `
 [out:json];
 area["name"="新潟県"]["admin_level"="4"];
@@ -137,6 +151,7 @@ out geom;
   },
   {
     region: "富山県富山市",
+    capital: true,
     query: `
 [out:json];
 area["name"="富山県"]["admin_level"="4"];
@@ -146,6 +161,7 @@ out geom;
   },
   {
     region: "石川県金沢市",
+    capital: true,
     query: `
 [out:json];
 area["name"="石川県"]["admin_level"="4"];
@@ -155,6 +171,7 @@ out geom;
   },
   {
     region: "福井県福井市",
+    capital: true,
     query: `
 [out:json];
 area["name"="福井県"]["admin_level"="4"];
@@ -164,6 +181,7 @@ out geom;
   },
   {
     region: "山梨県甲府市",
+    capital: true,
     query: `
 [out:json];
 area["name"="山梨県"]["admin_level"="4"];
@@ -173,6 +191,7 @@ out geom;
   },
   {
     region: "長野県長野市",
+    capital: true,
     query: `
 [out:json];
 area["name"="長野県"]["admin_level"="4"];
@@ -182,6 +201,7 @@ out geom;
   },
   {
     region: "岐阜県岐阜市",
+    capital: true,
     query: `
 [out:json];
 area["name"="岐阜県"]["admin_level"="4"];
@@ -191,6 +211,7 @@ out geom;
   },
   {
     region: "静岡県静岡市",
+    capital: true,
     query: `
 [out:json];
 area["name"="静岡県"]["admin_level"="4"];
@@ -200,6 +221,7 @@ out geom;
   },
   {
     region: "愛知県名古屋市",
+    capital: true,
     query: `
 [out:json];
 area["name"="愛知県"]["admin_level"="4"];
@@ -209,6 +231,7 @@ out geom;
   },
   {
     region: "三重県津市",
+    capital: true,
     query: `
 [out:json];
 area["name"="三重県"]["admin_level"="4"];
@@ -218,6 +241,7 @@ out geom;
   },
   {
     region: "滋賀県大津市",
+    capital: true,
     query: `
 [out:json];
 area["name"="滋賀県"]["admin_level"="4"];
@@ -227,6 +251,7 @@ out geom;
   },
   {
     region: "京都府京都市",
+    capital: true,
     query: `
 [out:json];
 area["name"="京都府"]["admin_level"="4"];
@@ -236,6 +261,7 @@ out geom;
   },
   {
     region: "大阪府大阪市",
+    capital: true,
     query: `
 [out:json];
 area["name"="大阪府"]["admin_level"="4"];
@@ -245,6 +271,7 @@ out geom;
   },
   {
     region: "兵庫県神戸市",
+    capital: true,
     query: `
 [out:json];
 area["name"="兵庫県"]["admin_level"="4"];
@@ -254,6 +281,7 @@ out geom;
   },
   {
     region: "奈良県奈良市",
+    capital: true,
     query: `
 [out:json];
 area["name"="奈良県"]["admin_level"="4"];
@@ -263,6 +291,7 @@ out geom;
   },
   {
     region: "和歌山県和歌山市",
+    capital: true,
     query: `
 [out:json];
 area["name"="和歌山県"]["admin_level"="4"];
@@ -272,6 +301,7 @@ out geom;
   },
   {
     region: "鳥取県鳥取市",
+    capital: true,
     query: `
 [out:json];
 area["name"="鳥取県"]["admin_level"="4"];
@@ -281,6 +311,7 @@ out geom;
   },
   {
     region: "島根県松江市",
+    capital: true,
     query: `
 [out:json];
 area["name"="島根県"]["admin_level"="4"];
@@ -290,6 +321,7 @@ out geom;
   },
   {
     region: "岡山県岡山市",
+    capital: true,
     query: `
 [out:json];
 area["name"="岡山県"]["admin_level"="4"];
@@ -299,6 +331,7 @@ out geom;
   },
   {
     region: "広島県広島市",
+    capital: true,
     query: `
 [out:json];
 area["name"="広島県"]["admin_level"="4"];
@@ -308,6 +341,7 @@ out geom;
   },
   {
     region: "山口県山口市",
+    capital: true,
     query: `
 [out:json];
 area["name"="山口県"]["admin_level"="4"];
@@ -317,6 +351,7 @@ out geom;
   },
   {
     region: "徳島県徳島市",
+    capital: true,
     query: `
 [out:json];
 area["name"="徳島県"]["admin_level"="4"];
@@ -326,6 +361,7 @@ out geom;
   },
   {
     region: "香川県高松市",
+    capital: true,
     query: `
 [out:json];
 area["name"="香川県"]["admin_level"="4"];
@@ -335,6 +371,7 @@ out geom;
   },
   {
     region: "愛媛県松山市",
+    capital: true,
     query: `
 [out:json];
 area["name"="愛媛県"]["admin_level"="4"];
@@ -344,6 +381,7 @@ out geom;
   },
   {
     region: "高知県高知市",
+    capital: true,
     query: `
 [out:json];
 area["name"="高知県"]["admin_level"="4"];
@@ -353,6 +391,7 @@ out geom;
   },
   {
     region: "福岡県福岡市",
+    capital: true,
     query: `
 [out:json];
 area["name"="福岡県"]["admin_level"="4"];
@@ -362,6 +401,7 @@ out geom;
   },
   {
     region: "佐賀県佐賀市",
+    capital: true,
     query: `
 [out:json];
 area["name"="佐賀県"]["admin_level"="4"];
@@ -371,6 +411,7 @@ out geom;
   },
   {
     region: "長崎県長崎市",
+    capital: true,
     query: `
 [out:json];
 area["name"="長崎県"]["admin_level"="4"];
@@ -380,6 +421,7 @@ out geom;
   },
   {
     region: "熊本県熊本市",
+    capital: true,
     query: `
 [out:json];
 area["name"="熊本県"]["admin_level"="4"];
@@ -389,6 +431,7 @@ out geom;
   },
   {
     region: "大分県大分市",
+    capital: true,
     query: `
 [out:json];
 area["name"="大分県"]["admin_level"="4"];
@@ -398,6 +441,7 @@ out geom;
   },
   {
     region: "宮崎県宮崎市",
+    capital: true,
     query: `
 [out:json];
 area["name"="宮崎県"]["admin_level"="4"];
@@ -407,6 +451,7 @@ out geom;
   },
   {
     region: "鹿児島県鹿児島市",
+    capital: true,
     query: `
 [out:json];
 area["name"="鹿児島県"]["admin_level"="4"];
@@ -416,6 +461,7 @@ out geom;
   },
   {
     region: "沖縄県那覇市",
+    capital: true,
     query: `
 [out:json];
 area["name"="沖縄県"]["admin_level"="4"];

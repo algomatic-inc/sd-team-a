@@ -129,8 +129,8 @@ export const RelocatePage: React.FC = () => {
                 <div
                   style={{
                     position: "absolute",
-                    [idx < 2 ? "bottom" : "top"]: "8px",
-                    [idx % 2 === 0 ? "right" : "left"]: "8px",
+                    [idx < 2 ? "bottom" : "top"]: "20px",
+                    [idx % 2 === 0 ? "right" : "left"]: "20px",
                     color: "white",
                   }}
                 >

@@ -8,7 +8,7 @@ import Map, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { getOverpassResponseJsonWithCache } from "../../lib/osm/getOverpass";
-import { overpassQueriesForCapitals } from "../../lib/osm/overpassQueries/overpassQueriesForCapitals";
+import { overpassQueriesForRegions } from "../../lib/osm/overpassQueries/overpassQueriesForRegions";
 import osmtogeojson from "osmtogeojson";
 import { fitBoundsToGeoJson } from "../../lib/maplibre/fitBoundsToGeoJson";
 
@@ -25,7 +25,7 @@ export const NobushiRegionalMap: React.FC<{
   useEffect(() => {
     const doit = async () => {
       if (region.length > 0) {
-        const query = overpassQueriesForCapitals.find(
+        const query = overpassQueriesForRegions.find(
           (q) => q.region === region
         )?.query;
         if (!query) {

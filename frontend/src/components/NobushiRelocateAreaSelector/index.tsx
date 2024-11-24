@@ -1,9 +1,9 @@
-import { overpassQueriesForCapitals } from "../../lib/osm/overpassQueries/overpassQueriesForCapitals";
+import { overpassQueriesForRegions } from "../../lib/osm/overpassQueries/overpassQueriesForRegions";
 import { overpassQueriesForPrefectures } from "../../lib/osm/overpassQueries/overpassQueriesForPrefectures";
 
 const japanPrefectures = overpassQueriesForPrefectures.map((q) => q.region);
 
-const japanCapitalByPrefectures = overpassQueriesForCapitals.map(
+const japanCapitalByPrefectures = overpassQueriesForRegions.map(
   (q) => q.region
 );
 
