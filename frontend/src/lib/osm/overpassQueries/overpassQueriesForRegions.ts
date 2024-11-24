@@ -220,6 +220,16 @@ out geom;
 `,
   },
   {
+    region: "静岡県伊豆市",
+    capital: false,
+    query: `
+  [out:json];
+  area["name"="静岡県"]["admin_level"="4"];
+  relation["name"="伊豆市"]["admin_level"="7"];
+  out geom;
+  `,
+  },
+  {
     region: "愛知県名古屋市",
     capital: true,
     query: `
