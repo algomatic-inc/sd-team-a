@@ -31,6 +31,8 @@ import { NobushiChatMessageLogs } from "../components/NobushiChatMessageLogs";
 import { NobushiRegionalMap } from "../components/NobushiRegionalMap";
 import { NobushiRelocateAreaSelector } from "../components/NobushiRelocateAreaSelector";
 import { NobushiAnimatedText } from "../components/NobushiAnimatedText";
+import { NobushiUserProfileCollector } from "../components/NobushiUserProfileCollector";
+import { NobushiUserProfile } from "../types/NobushiUserProfile";
 
 export const RelocatePage: React.FC = () => {
   // systemMessages 関連
@@ -48,6 +50,8 @@ export const RelocatePage: React.FC = () => {
 
   // NobushiAutoResizeTextarea の入力状態
   const [inputValue, setInputValue] = useState("");
+
+  const [profile, setProfile] = useState<NobushiUserProfile | null>(null);
 
   const [area1, setArea1] = useState<string>("島根県松江市");
   const [area2, setArea2] = useState<string>("静岡県伊豆市");
@@ -72,6 +76,10 @@ export const RelocatePage: React.FC = () => {
     [scrollToBottomOfChatMessages]
   );
 
+  const onProfileCollected = useCallback((profile: NobushiUserProfile) => {
+    setProfile(profile);
+  }, []);
+
   const onSubmit = useCallback(async () => {
     insertNewChatMessage({
       role: "user",
@@ -95,8 +103,7 @@ export const RelocatePage: React.FC = () => {
           left: 0,
           height: "100vh",
           width: "100vw",
-          display: "none",
-          //display: "flex",
+          display: profile ? "none" : "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
@@ -104,89 +111,102 @@ export const RelocatePage: React.FC = () => {
           zIndex: 100000,
         }}
       >
-        <h1>
-          <NobushiAnimatedText text="地方移住支援システム" interval={80} />
-        </h1>
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100vh",
-          width: "100vw",
-          zIndex: 999,
-        }}
-      >
-        {
-          // ユーザープロフィールを取得完了後に、
-          // 2x2 のグリッドで地域ごとの地図を表示
-        }
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "1fr 1fr",
-            height: "100vh",
-            width: "100vw",
+            fontSize: "2.5em",
+            fontWeight: 600,
           }}
         >
-          {[area1, area2, area3, area4].map((area, idx) => {
-            return (
-              <div
-                style={{
-                  position: "relative",
-                  height: "100%",
-                  width: "100%",
-                }}
-              >
-                <NobushiRegionalMap
-                  region={area}
-                  attributionPosition={
-                    idx === 0
-                      ? "bottom-right"
-                      : idx === 1
-                      ? "bottom-left"
-                      : idx === 2
-                      ? "top-right"
-                      : "top-left"
-                  }
-                />
+          <NobushiAnimatedText
+            text="地方移住支援システム　NOBUSHI"
+            interval={70}
+          />
+        </div>
+        <h2>プロフィールを入力してください</h2>
+        <NobushiUserProfileCollector onProfileCollected={onProfileCollected} />
+      </div>
+      {profile && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            height: "100vh",
+            width: "100vw",
+            zIndex: 999,
+            opacity: profile ? 1 : 0,
+          }}
+        >
+          {
+            // ユーザープロフィールを取得完了後に、
+            // 2x2 のグリッドで地域ごとの地図を表示
+          }
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gridTemplateRows: "1fr 1fr",
+              height: "100vh",
+              width: "100vw",
+            }}
+          >
+            {[area1, area2, area3, area4].map((area, idx) => {
+              return (
                 <div
                   style={{
-                    position: "absolute",
-                    [idx < 2 ? "bottom" : "top"]: "25px",
-                    [idx % 2 === 0 ? "right" : "left"]: "5px",
-                    color: "white",
+                    position: "relative",
+                    height: "100%",
+                    width: "100%",
                   }}
                 >
-                  <NobushiRelocateAreaSelector
-                    currentAreas={[area1, area2, area3, area4]}
-                    currentArea={area}
-                    onSelect={(newArea) => {
-                      console.log(newArea, idx);
-                      switch (idx) {
-                        case 0:
-                          setArea1(newArea);
-                          break;
-                        case 1:
-                          setArea2(newArea);
-                          break;
-                        case 2:
-                          setArea3(newArea);
-                          break;
-                        case 3:
-                          setArea4(newArea);
-                          break;
-                      }
-                    }}
+                  <NobushiRegionalMap
+                    region={area}
+                    attributionPosition={
+                      idx === 0
+                        ? "bottom-right"
+                        : idx === 1
+                        ? "bottom-left"
+                        : idx === 2
+                        ? "top-right"
+                        : "top-left"
+                    }
                   />
+                  <div
+                    style={{
+                      position: "absolute",
+                      [idx < 2 ? "bottom" : "top"]: "25px",
+                      [idx % 2 === 0 ? "right" : "left"]: "5px",
+                      color: "white",
+                    }}
+                  >
+                    <NobushiRelocateAreaSelector
+                      currentAreas={[area1, area2, area3, area4]}
+                      currentArea={area}
+                      onSelect={(newArea) => {
+                        console.log(newArea, idx);
+                        switch (idx) {
+                          case 0:
+                            setArea1(newArea);
+                            break;
+                          case 1:
+                            setArea2(newArea);
+                            break;
+                          case 2:
+                            setArea3(newArea);
+                            break;
+                          case 3:
+                            setArea4(newArea);
+                            break;
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
