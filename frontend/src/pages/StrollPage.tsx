@@ -34,6 +34,7 @@ import { NobushiDepartureAndDestination } from "../components/NobushiDepartureAn
 import { NobushiGreetings } from "../components/NobushiGreetings";
 import { NobushiSystemMessages } from "../components/NobushiSystemMessages";
 import { NobushiChatMessageLogs } from "../components/NobushiChatMessageLogs";
+import { NobushiStreetViewModal } from "../components/NobushiStreetViewModal";
 
 export const StrollPage = () => {
   const mapRef = useRef<MapRef | null>(null);
@@ -75,6 +76,8 @@ export const StrollPage = () => {
   const [routeGeoJson, setRouteGeoJson] = useState<turf.AllGeoJSON | null>(
     null
   );
+  // Google Street View Imageを表示するためのModalの表示状態
+  const [streetViewModalIsOpen, setStreetViewModalIsOpen] = useState(false);
 
   // systemMessage に表示する内容を更新する関数
   const insertNewSystemMessage = useCallback(
@@ -261,6 +264,15 @@ export const StrollPage = () => {
     insertNewChatMessage,
   ]);
 
+  const [streetViewLatLng, setStreetViewLatLng] = useState<
+    [number, number] | undefined
+  >(undefined); // 新しい state 変数
+
+  const handleClick = useCallback((e: maplibregl.MapMouseEvent) => {
+    setStreetViewLatLng([e.lngLat.lat, e.lngLat.lng]);
+    setStreetViewModalIsOpen(true);
+  }, []);
+
   return (
     <div
       style={{
@@ -338,6 +350,7 @@ export const StrollPage = () => {
           style={{ width: "100vw", height: "100vh" }}
           mapStyle="https://unopengis.github.io/foil4g/stylejson/server.arcgisonline.com/world_imagery/style.json"
           attributionControl={false}
+          onClick={handleClick}
         >
           <AttributionControl position="top-right" />
           {routeGeoJson && (
@@ -358,6 +371,13 @@ export const StrollPage = () => {
           )}
         </Map>
       </div>
+      {streetViewModalIsOpen && streetViewLatLng && (
+        <NobushiStreetViewModal
+          lat={streetViewLatLng[0]}
+          lon={streetViewLatLng[1]}
+          onClose={() => setStreetViewModalIsOpen(false)}
+        />
+      )}{" "}
     </div>
   );
 };
