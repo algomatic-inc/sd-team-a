@@ -21,11 +21,13 @@ import { NobushiChatMessage } from "../types/NobushiChatMessage";
 import { useScrollToBottom } from "../hooks/scrollToBottom";
 
 // components
+/*
 import { NobushiAutoResizeTextarea } from "../components/NobushiAutoResizeTextarea";
 import { NobushiSubmitButton } from "../components/NobushiSubmitButton";
 import { NobushiGreetings } from "../components/NobushiGreetings";
 import { NobushiSystemMessages } from "../components/NobushiSystemMessages";
 import { NobushiChatMessageLogs } from "../components/NobushiChatMessageLogs";
+*/
 import { NobushiRegionalMap } from "../components/NobushiRegionalMap";
 import { NobushiRelocateAreaSelector } from "../components/NobushiRelocateAreaSelector";
 
@@ -87,54 +89,6 @@ export const RelocatePage: React.FC = () => {
     >
       <div
         style={{
-          position: "absolute",
-          top: systemMessages.length < 2 ? "50%" : 0,
-          left: systemMessages.length < 2 ? 0 : "75vw",
-          height: systemMessages.length < 2 ? "5vh" : "98vh",
-          width: systemMessages.length < 2 ? "100%" : "24vw",
-          margin: "0 auto 10px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: systemMessages.length < 2 ? "center" : "flex-end",
-          alignItems: systemMessages.length < 2 ? "center" : "flex-end",
-          zIndex: 10000,
-        }}
-      >
-        {systemMessages.length < 2 && (
-          <NobushiGreetings text="あなたの地方移住をお手伝いします" />
-        )}
-        <NobushiChatMessageLogs
-          chatMessages={chatMessages}
-          chatMessagesEndRef={chatMessagesEndRef}
-        />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "24vw",
-            height: "auto",
-            padding: "10px",
-            borderRadius: "24px",
-            background: "rgba(255, 255, 255, 0.8)",
-          }}
-        >
-          <NobushiAutoResizeTextarea
-            value={inputValue}
-            onChange={setInputValue}
-            placeholder="星空が綺麗に見えるところがいいな"
-          />
-          <NobushiSubmitButton onSubmit={onSubmit} />
-        </div>
-      </div>
-      <>
-        <NobushiSystemMessages
-          systemMessages={systemMessages}
-          systemMessageEndRef={systemMessagesEndRef}
-        />
-      </>
-      <div
-        style={{
           height: "100vh",
           width: "100vw",
         }}
@@ -175,8 +129,8 @@ export const RelocatePage: React.FC = () => {
                 <div
                   style={{
                     position: "absolute",
-                    [idx < 2 ? "top" : "bottom"]: "0%",
-                    right: "0%",
+                    [idx < 2 ? "bottom" : "top"]: "8px",
+                    [idx % 2 === 0 ? "right" : "left"]: "8px",
                     color: "white",
                   }}
                 >
