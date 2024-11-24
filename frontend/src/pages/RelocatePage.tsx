@@ -89,8 +89,25 @@ export const RelocatePage: React.FC = () => {
     >
       <div
         style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
           height: "100vh",
           width: "100vw",
+          display: "none", //"flex",
+          flexDirection: "column",
+          backgroundColor: "white",
+          zIndex: 100000,
+        }}
+      ></div>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100vh",
+          width: "100vw",
+          zIndex: 999,
         }}
       >
         {

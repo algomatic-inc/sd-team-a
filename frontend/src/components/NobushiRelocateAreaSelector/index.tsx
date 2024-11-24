@@ -12,7 +12,6 @@ export const NobushiRelocateAreaSelector: React.FC<{
   currentArea: string;
   onSelect: (area: string) => void;
 }> = ({ currentAreas, currentArea, onSelect }) => {
-  console.log(currentAreas, currentArea);
   return (
     <div
       style={{
@@ -43,7 +42,6 @@ export const NobushiRelocateAreaSelector: React.FC<{
               }}
             >
               {japanCapitalByPrefectures.map((capitalByPrefecture, index) => {
-                console.log(capitalByPrefecture, currentArea);
                 return (
                   <option
                     key={`${capitalByPrefecture}-${index}`}
