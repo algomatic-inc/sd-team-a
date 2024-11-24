@@ -15,7 +15,7 @@ export const NobushiGreetings: React.FC<{
         userSelect: "none",
       }}
     >
-      <NobushiAnimatedText text={text} />
+      <NobushiAnimatedText text={text} interval={100} />
     </div>
   );
 };

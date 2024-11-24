@@ -30,6 +30,7 @@ import { NobushiChatMessageLogs } from "../components/NobushiChatMessageLogs";
 */
 import { NobushiRegionalMap } from "../components/NobushiRegionalMap";
 import { NobushiRelocateAreaSelector } from "../components/NobushiRelocateAreaSelector";
+import { NobushiAnimatedText } from "../components/NobushiAnimatedText";
 
 export const RelocatePage: React.FC = () => {
   // systemMessages 関連
@@ -94,12 +95,19 @@ export const RelocatePage: React.FC = () => {
           left: 0,
           height: "100vh",
           width: "100vw",
-          display: "none", //"flex",
+          display: "none",
+          //display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
           backgroundColor: "white",
           zIndex: 100000,
         }}
-      ></div>
+      >
+        <h1>
+          <NobushiAnimatedText text="地方移住支援システム" interval={80} />
+        </h1>
+      </div>
       <div
         style={{
           position: "absolute",
@@ -111,6 +119,7 @@ export const RelocatePage: React.FC = () => {
         }}
       >
         {
+          // ユーザープロフィールを取得完了後に、
           // 2x2 のグリッドで地域ごとの地図を表示
         }
         <div
