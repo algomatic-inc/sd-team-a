@@ -75,3 +75,10 @@ def test_geojson_png_get():
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/png"
     assert response.content is not None
+
+
+def test_streetview_image_get():
+    response = client.get("/streetview_png", params={"lat": 35.6983223, "lon": 139.7730186})
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "image/png"
+    assert response.content is not None

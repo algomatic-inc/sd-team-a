@@ -12,6 +12,7 @@ from langserve import add_routes
 from lib.penetrator import get_estate_info_by_coordinate
 from lib.geojson_to_img import geojson_to_img
 from lib.chain.nobushi import nobushi_chain
+from lib.streetview_image import get_streetview_image_by_coordinate
 
 
 load_dotenv()
@@ -81,6 +82,29 @@ async def geojson_png(request: Request):
     img_bytes = img_byte_arr.getvalue()
 
     # バイナリデータをレスポンスとして返す
+    return Response(content=img_bytes, media_type="image/png")
+
+
+@app.post("/streetview_png")
+@app.get("/streetview_png")
+async def streetview_png(request: Request):
+    """
+    緯度経度を受け取り、ストリートビュー画像を返す。
+    """
+    if request.method == "POST":
+        req_json = await request.json()
+        lat = req_json.get("lat", "")
+        lon = req_json.get("lon", "")
+    else:
+        lat = request.query_params.get("lat", "")
+        lon = request.query_params.get("lon", "")
+
+    if not lat or not lon:
+        return {"error": "lat, lon are required"}
+
+    # ストリートビュー画像を取得
+    img_bytes = get_streetview_image_by_coordinate(lat, lon)
+
     return Response(content=img_bytes, media_type="image/png")
 
 
