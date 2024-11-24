@@ -35,5 +35,9 @@ gcloud auth login
 ```
 
 ```sh
+gcloud auth configure-docker
+```
+
+```sh
 make deploy
 ```
