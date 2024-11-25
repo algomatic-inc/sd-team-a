@@ -155,6 +155,7 @@ export const RelocatePage: React.FC = () => {
             {[area1, area2, area3, area4].map((area, idx) => {
               return (
                 <div
+                  key={`area-${area}-${idx}`}
                   style={{
                     position: "relative",
                     height: "100%",
