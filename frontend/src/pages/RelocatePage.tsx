@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 // libs
 /*
@@ -12,13 +12,13 @@ import { fitBoundsToGeoJson } from "../lib/maplibre/fitBoundsToGeoJson";
 import { extractDepartureAndDestination } from "../lib/gemini/extractDepartureAndDestination";
 import { explainSatelliteImagery } from "../lib/gemini/explainRouteImagery";
 import { getRouteSatelliteImageryUrl } from "../lib/nobushi/getRouteSatelliteImageryUrl";
-*/
 
 // types
 import { NobushiChatMessage } from "../types/NobushiChatMessage";
 
 // hooks
 import { useScrollToBottom } from "../hooks/scrollToBottom";
+*/
 
 // components
 /*
@@ -35,6 +35,18 @@ import { NobushiUserProfileCollector } from "../components/NobushiUserProfileCol
 import { NobushiUserProfile } from "../types/NobushiUserProfile";
 
 export const RelocatePage: React.FC = () => {
+  const [profile, setProfile] = useState<NobushiUserProfile | null>(null);
+
+  const [area1, setArea1] = useState<string>("島根県松江市");
+  const [area2, setArea2] = useState<string>("静岡県伊豆市");
+  const [area3, setArea3] = useState<string>("福岡県福岡市");
+  const [area4, setArea4] = useState<string>("沖縄県那覇市");
+
+  const onProfileCollected = useCallback((profile: NobushiUserProfile) => {
+    setProfile(profile);
+  }, []);
+
+  /*
   // systemMessages 関連
   const systemMessagesEndRef = useRef<HTMLDivElement>(null);
   const scrollToBottomOfSystemMessages =
@@ -50,13 +62,6 @@ export const RelocatePage: React.FC = () => {
 
   // NobushiAutoResizeTextarea の入力状態
   const [inputValue, setInputValue] = useState("");
-
-  const [profile, setProfile] = useState<NobushiUserProfile | null>(null);
-
-  const [area1, setArea1] = useState<string>("島根県松江市");
-  const [area2, setArea2] = useState<string>("静岡県伊豆市");
-  const [area3, setArea3] = useState<string>("福岡県福岡市");
-  const [area4, setArea4] = useState<string>("沖縄県那覇市");
 
   // systemMessage に表示する内容を更新する関数
   const insertNewSystemMessage = useCallback(
@@ -76,10 +81,6 @@ export const RelocatePage: React.FC = () => {
     [scrollToBottomOfChatMessages]
   );
 
-  const onProfileCollected = useCallback((profile: NobushiUserProfile) => {
-    setProfile(profile);
-  }, []);
-
   const onSubmit = useCallback(async () => {
     insertNewChatMessage({
       role: "user",
@@ -88,6 +89,7 @@ export const RelocatePage: React.FC = () => {
     });
     insertNewSystemMessage("ユーザーの入力を分析中…");
   }, [insertNewChatMessage, inputValue, insertNewSystemMessage]);
+  */
 
   return (
     <div
