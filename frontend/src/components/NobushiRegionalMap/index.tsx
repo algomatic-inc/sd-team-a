@@ -36,7 +36,7 @@ export const NobushiRegionalMap: React.FC<{
     FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties> | undefined
   >(undefined);
 
-  // 人が住める10個のGPS座標
+  // 人が住める12個のGPS座標
   const [peopleCanLiveCoordinates, setPeopleCanLiveCoordinates] = useState<
     Position[]
   >([]);
@@ -191,24 +191,24 @@ export const NobushiRegionalMap: React.FC<{
 
   // ランダムなGPS座標を繰り返し取得して、getRealEstateInfoを呼び出して、人が住めるかどうかを判定し、
   // 人が住める場合はpeopleCanLiveCoordinatesに追加する
-  // peopleCanLiveCoordinatesが10個になるまで繰り返す
+  // peopleCanLiveCoordinatesが12個になるまで繰り返す
   useEffect(() => {
     const doit = async () => {
       if (!geoJson) {
         return;
       }
-      if (peopleCanLiveCoordinates.length >= 10) {
+      if (peopleCanLiveCoordinates.length >= 12) {
         console.log(`peopleCanLiveCoordinates.length >= 10`);
         return;
       }
       for (let i = 0; i < 10; i++) {
         const coordinate = getRandomGeoJsonCoordinate();
         if (!coordinate) {
-          return;
+          continue;
         }
         const res = await getRealEstateInfo(coordinate[1], coordinate[0]);
         if (!res) {
-          return;
+          continue;
         }
         console.log(`res:`, res);
         if (
@@ -216,11 +216,11 @@ export const NobushiRegionalMap: React.FC<{
           res["specificUseDistrict"] === "市街化区域外"
         ) {
           // 人が住めない
-          return;
+          continue;
         }
         if (res["chibanAddress"] === "該当なし") {
           // 人が住めない
-          return;
+          continue;
         }
         setPeopleCanLiveCoordinates((prev) => [...prev, coordinate]);
       }
