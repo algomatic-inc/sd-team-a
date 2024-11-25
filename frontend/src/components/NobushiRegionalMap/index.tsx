@@ -201,29 +201,34 @@ export const NobushiRegionalMap: React.FC<{
         console.log(`peopleCanLiveCoordinates.length >= 10`);
         return;
       }
-      for (let i = 0; i < 10; i++) {
+      const promises = [];
+      for (let i = 0; i < 3; i++) {
         const coordinate = getRandomGeoJsonCoordinate();
         if (!coordinate) {
           continue;
         }
-        const res = await getRealEstateInfo(coordinate[1], coordinate[0]);
-        if (!res) {
-          continue;
-        }
-        console.log(`res:`, res);
-        if (
-          res["specificUseDistrict"] === "取得失敗" ||
-          res["specificUseDistrict"] === "市街化区域外"
-        ) {
-          // 人が住めない
-          continue;
-        }
-        if (res["chibanAddress"] === "該当なし") {
-          // 人が住めない
-          continue;
-        }
-        setPeopleCanLiveCoordinates((prev) => [...prev, coordinate]);
+        promises.push(
+          getRealEstateInfo(coordinate[1], coordinate[0]).then((res) => {
+            if (!res) {
+              return;
+            }
+            console.log(`res:`, res);
+            if (
+              res["specificUseDistrict"] === "取得失敗" ||
+              res["specificUseDistrict"] === "市街化区域外"
+            ) {
+              // 人が住めない
+              return;
+            }
+            if (res["chibanAddress"] === "該当なし") {
+              // 人が住めない
+              return;
+            }
+            setPeopleCanLiveCoordinates((prev) => [...prev, coordinate]);
+          })
+        );
       }
+      await Promise.all(promises);
     };
     doit();
   }, [geoJson, getRandomGeoJsonCoordinate, peopleCanLiveCoordinates.length]);
