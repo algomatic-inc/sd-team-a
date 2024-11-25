@@ -121,7 +121,7 @@ out geom;
   },
   {
     region: "東京都台東区",
-    capital: true,
+    capital: false,
     query: `
 [out:json];
 area["name"="東京都"]["admin_level"="4"];
@@ -129,6 +129,17 @@ relation["name"="台東区"]["admin_level"="7"];
 out geom;
 `,
   },
+  {
+    region: "東京都中野区",
+    capital: false,
+    query: `
+[out:json];
+area["name"="東京都"]["admin_level"="4"];
+relation["name"="中野区"]["admin_level"="7"];
+out geom;
+`,
+  },
+
   {
     region: "神奈川県横浜市",
     capital: true,

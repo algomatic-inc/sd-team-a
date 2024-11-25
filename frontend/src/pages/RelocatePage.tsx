@@ -37,10 +37,10 @@ import { NobushiUserProfile } from "../types/NobushiUserProfile";
 export const RelocatePage: React.FC = () => {
   const [profile, setProfile] = useState<NobushiUserProfile | null>(null);
 
-  const [area1, setArea1] = useState<string>("島根県松江市");
-  const [area2, setArea2] = useState<string>("静岡県伊豆市");
-  const [area3, setArea3] = useState<string>("福岡県福岡市");
-  const [area4, setArea4] = useState<string>("沖縄県那覇市");
+  const [area1, setArea1] = useState<string>("東京都台東区");
+  const [area2, setArea2] = useState<string>("東京都中野区");
+  const [area3, setArea3] = useState<string>("兵庫県神戸市");
+  const [area4, setArea4] = useState<string>("愛知県名古屋市");
 
   const onProfileCollected = useCallback((profile: NobushiUserProfile) => {
     setProfile(profile);
