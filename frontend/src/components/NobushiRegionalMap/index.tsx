@@ -205,7 +205,7 @@ export const NobushiRegionalMap: React.FC<{
       for (let i = 0; i < 3; i++) {
         const coordinate = getRandomGeoJsonCoordinate();
         if (!coordinate) {
-          continue;
+            continue
         }
         promises.push(
           getRealEstateInfo(coordinate[1], coordinate[0]).then((res) => {

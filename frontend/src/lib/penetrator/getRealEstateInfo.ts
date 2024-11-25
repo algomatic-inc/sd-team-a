@@ -3,6 +3,12 @@ export const getRealEstateInfo = async (lat: number, lon: number) => {
   const params = new URLSearchParams();
   params.append("lat", lat.toString());
   params.append("lon", lon.toString());
-  const response = await fetch(`${apiEndpoint}?${params.toString()}`);
+  const myAbortController = new AbortController();
+  const response = await fetch(`${apiEndpoint}?${params.toString()}`, {
+    signal: myAbortController.signal,
+  });
+  setTimeout(() => {
+    myAbortController.abort();
+  }, 5000);
   return response.json();
 };
