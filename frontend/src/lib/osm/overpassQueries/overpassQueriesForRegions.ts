@@ -120,11 +120,12 @@ out geom;
 `,
   },
   {
-    region: "東京都",
+    region: "東京都台東区",
     capital: true,
     query: `
 [out:json];
-relation["name"="東京都"]["admin_level"="4"];
+area["name"="東京都"]["admin_level"="4"];
+relation["name"="台東区"]["admin_level"="7"];
 out geom;
 `,
   },
