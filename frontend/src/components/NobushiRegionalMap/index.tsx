@@ -17,6 +17,7 @@ import {
   FeatureCollection,
   MultiPolygon,
   Polygon,
+  Geometry,
   GeoJsonProperties,
 } from "geojson";
 
@@ -90,13 +91,16 @@ export const NobushiRegionalMap: React.FC<{
           ),
         } as FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties>;
         console.log(`newGeoJson:`, newGeoJson);
+        if (newGeoJson.features === undefined) {
+          console.error(`newGeoJson.features is undefined`);
+          return;
+        }
 
         // 海領域を除外する処理
         if (landMask && newGeoJson) {
-          const clipped = turf.intersect(
-            landMask,
-            newGeoJson as FeatureCollection<Polygon | MultiPolygon>
-          );
+          // `turf.mask` に正しい型を渡す
+          const clipped = turf.intersect(landMask, newGeoJson);
+
           console.log(clipped);
           if (!clipped) {
             console.error("clipped is undefined");
