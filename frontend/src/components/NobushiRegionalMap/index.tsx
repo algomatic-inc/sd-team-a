@@ -45,7 +45,7 @@ export const NobushiRegionalMap: React.FC<{
         "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_1_states_provinces.geojson"
       );
       const data = await response.json();
-      // 日本の都道府県だけを抽出
+      // 日本の都道府県かつregionに合致する都道府県だけを抽出
       const japanLand = {
         type: "FeatureCollection",
         features: data.features
