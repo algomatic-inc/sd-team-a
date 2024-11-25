@@ -120,12 +120,11 @@ out geom;
 `,
   },
   {
-    region: "東京都東京都",
+    region: "東京都",
     capital: true,
     query: `
 [out:json];
-area["name"="東京都"]["admin_level"="4"];
-relation["name"="東京都"]["admin_level"="7"];
+relation["name"="東京都"]["admin_level"="4"];
 out geom;
 `,
   },
