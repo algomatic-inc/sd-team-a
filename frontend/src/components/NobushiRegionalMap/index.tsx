@@ -197,7 +197,7 @@ export const NobushiRegionalMap: React.FC<{
       if (!geoJson) {
         return;
       }
-      if (peopleCanLiveCoordinates.length >= 12) {
+      if (peopleCanLiveCoordinates.length >= 3) {
         console.log(`peopleCanLiveCoordinates.length >= 10`);
         return;
       }
@@ -205,17 +205,17 @@ export const NobushiRegionalMap: React.FC<{
       for (let i = 0; i < 3; i++) {
         const coordinate = getRandomGeoJsonCoordinate();
         if (!coordinate) {
-            continue
+          continue;
         }
         promises.push(
           getRealEstateInfo(coordinate[1], coordinate[0]).then((res) => {
             if (!res) {
               return;
             }
-            console.log(`res:`, res);
             if (
               res["specificUseDistrict"] === "取得失敗" ||
-              res["specificUseDistrict"] === "市街化区域外"
+              res["specificUseDistrict"] === "市街化区域外" ||
+              res["specificUseDistrict"] === "工業専用地域"
             ) {
               // 人が住めない
               return;
@@ -224,6 +224,7 @@ export const NobushiRegionalMap: React.FC<{
               // 人が住めない
               return;
             }
+            console.log(`res:`, res);
             setPeopleCanLiveCoordinates((prev) => [...prev, coordinate]);
           })
         );
