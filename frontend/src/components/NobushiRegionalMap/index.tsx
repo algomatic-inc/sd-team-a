@@ -17,7 +17,7 @@ import {
   FeatureCollection,
   MultiPolygon,
   Polygon,
-  Geometry,
+  Position,
   GeoJsonProperties,
 } from "geojson";
 
@@ -98,23 +98,36 @@ export const NobushiRegionalMap: React.FC<{
 
         // 海領域を除外する処理
         if (landMask && newGeoJson) {
-          // `turf.mask` に正しい型を渡す
-          const clipped = turf.intersect(landMask, newGeoJson);
-
-          console.log(clipped);
+          // newGeoJson.features[0]が、Polygon or MultiPolygonを判定する
+          const poly1 =
+            newGeoJson.features[0].geometry.type === "Polygon"
+              ? turf.polygon(
+                  newGeoJson.features[0].geometry.coordinates as number[][][]
+                )
+              : turf.multiPolygon(
+                  newGeoJson.features[0].geometry.coordinates as Position[][][]
+                );
+          // landMask.featuresが、Polygon or MultiPolygonを判定する
+          const poly2 =
+            landMask.features[0].geometry.type === "Polygon"
+              ? turf.polygon(
+                  landMask.features[0].geometry.coordinates as number[][][]
+                )
+              : turf.multiPolygon(
+                  landMask.features[0].geometry.coordinates as Position[][][]
+                );
+          const clipped = turf.intersect(
+            // @ts-expect-error poly1とpoly2はPolygon | MultiPolygonである
+            turf.featureCollection([poly1, poly2])
+          );
           if (!clipped) {
-            console.error("clipped is undefined");
+            console.error(`clipped is undefined`);
             return;
           }
-
-          // Create a FeatureCollection from the clipped feature
           const clippedFeatureCollection = {
             type: "FeatureCollection",
-            features: clipped ? [clipped] : [],
-          } as GeoJSON.FeatureCollection<
-            GeoJSON.Polygon | GeoJSON.MultiPolygon,
-            GeoJSON.GeoJsonProperties
-          >;
+            features: [clipped],
+          } as FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties>;
           setGeoJson(clippedFeatureCollection);
         } else {
           setGeoJson(newGeoJson);
