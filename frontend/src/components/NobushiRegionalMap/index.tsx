@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Map, {
   AttributionControl,
   ControlPosition,
@@ -20,6 +20,7 @@ import {
   Position,
   GeoJsonProperties,
 } from "geojson";
+import { getRealEstateInfo } from "../../lib/penetrator/getRealEstateInfo";
 
 export const NobushiRegionalMap: React.FC<{
   region: string;
@@ -27,13 +28,18 @@ export const NobushiRegionalMap: React.FC<{
 }> = ({ region, attributionPosition }) => {
   const mapRef = useRef<MapRef | null>(null);
 
+  const [landMask, setLandMask] = useState<
+    FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties> | undefined
+  >(undefined);
+
   const [geoJson, setGeoJson] = useState<
     FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties> | undefined
   >(undefined);
 
-  const [landMask, setLandMask] = useState<
-    FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties> | undefined
-  >(undefined);
+  // 人が住める10個のGPS座標
+  const [peopleCanLiveCoordinates, setPeopleCanLiveCoordinates] = useState<
+    Position[]
+  >([]);
 
   useEffect(() => {
     // 日本列島マスクデータのロード
@@ -68,7 +74,6 @@ export const NobushiRegionalMap: React.FC<{
   useEffect(() => {
     const doit = async () => {
       if (region.length > 0 && landMask) {
-        console.log(`landMask:`, landMask);
         const query = overpassQueriesForRegions.find(
           (q) => q.region === region
         )?.query;
@@ -90,7 +95,6 @@ export const NobushiRegionalMap: React.FC<{
               feature.geometry.type === "MultiPolygon"
           ),
         } as FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties>;
-        console.log(`newGeoJson:`, newGeoJson);
         if (newGeoJson.features === undefined) {
           console.error(`newGeoJson.features is undefined`);
           return;
@@ -147,6 +151,82 @@ export const NobushiRegionalMap: React.FC<{
       });
     }
   }, [geoJson]);
+
+  // geoJsonのPolygon or MultiPolygonの内側のランダムなGPS座標を取得する
+  // turfにはそんな機能ないので頑張る
+  const getRandomGeoJsonCoordinate = useCallback(() => {
+    if (!geoJson) {
+      return;
+    }
+    const feature = geoJson.features[0];
+    if (!feature) {
+      return;
+    }
+    if (
+      feature.geometry.type !== "Polygon" &&
+      feature.geometry.type !== "MultiPolygon"
+    ) {
+      return;
+    }
+    const coordinates = feature.geometry.coordinates;
+    if (!coordinates) {
+      return;
+    }
+    // coordinatesはPolygonの場合はnumber[][][]、MultiPolygonの場合はnumber[][][][]
+    if (feature.geometry.type === "Polygon") {
+      // Polygonの場合、Polygonの内側のランダムな座標を取得する
+      const polygon = turf.polygon(coordinates as number[][][]);
+      const bbox = turf.bbox(polygon);
+      const randomPoint = turf.randomPosition(bbox);
+      return randomPoint;
+    }
+    if (feature.geometry.type === "MultiPolygon") {
+      // MultiPolygonの場合、MultiPolygonの内側のランダムな座標を取得する
+      const multiPolygon = turf.multiPolygon(coordinates as number[][][][]);
+      const bbox = turf.bbox(multiPolygon);
+      const randomPoint = turf.randomPosition(bbox);
+      return randomPoint;
+    }
+  }, [geoJson]);
+
+  // ランダムなGPS座標を繰り返し取得して、getRealEstateInfoを呼び出して、人が住めるかどうかを判定し、
+  // 人が住める場合はpeopleCanLiveCoordinatesに追加する
+  // peopleCanLiveCoordinatesが10個になるまで繰り返す
+  useEffect(() => {
+    const doit = async () => {
+      if (!geoJson) {
+        return;
+      }
+      if (peopleCanLiveCoordinates.length >= 10) {
+        console.log(`peopleCanLiveCoordinates.length >= 10`);
+        return;
+      }
+      for (let i = 0; i < 10; i++) {
+        const coordinate = getRandomGeoJsonCoordinate();
+        if (!coordinate) {
+          return;
+        }
+        const res = await getRealEstateInfo(coordinate[1], coordinate[0]);
+        if (!res) {
+          return;
+        }
+        console.log(`res:`, res);
+        if (
+          res["specificUseDistrict"] === "取得失敗" ||
+          res["specificUseDistrict"] === "市街化区域外"
+        ) {
+          // 人が住めない
+          return;
+        }
+        if (res["chibanAddress"] === "該当なし") {
+          // 人が住めない
+          return;
+        }
+        setPeopleCanLiveCoordinates((prev) => [...prev, coordinate]);
+      }
+    };
+    doit();
+  }, [geoJson, getRandomGeoJsonCoordinate, peopleCanLiveCoordinates.length]);
 
   return (
     <>
