@@ -22,16 +22,16 @@ export const exampleRealEstates: Array<{
   {
     region: "東京都中野区",
     name: "中野区の物件A",
-    osmId: "way/782268720",
-    lat: 35.703497,
-    lon: 139.662929,
+    osmId: "way/201705139",
+    lat: 35.701543,
+    lon: 139.667132,
   },
   {
     region: "東京都中野区",
     name: "中野区の物件B",
-    osmId: "way/201705139",
-    lat: 35.701543,
-    lon: 139.667132,
+    osmId: "way/782268720",
+    lat: 35.703497,
+    lon: 139.662929,
   },
   {
     region: "兵庫県神戸市",
@@ -50,8 +50,8 @@ export const exampleRealEstates: Array<{
   {
     region: "沖縄県那覇市",
     name: "那覇市の物件A",
-    osmId: "way/168260121",
-    lat: 26.216657,
-    lon: 127.693027,
+    osmId: "way/419084504",
+    lat: 26.218197,
+    lon: 127.691407,
   },
 ];

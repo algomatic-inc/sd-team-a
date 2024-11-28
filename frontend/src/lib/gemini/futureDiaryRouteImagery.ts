@@ -7,7 +7,7 @@ export const futureDiaryRouteSatelliteImagery = async (
   inputImageBase64: string
 ) => {
   const remoteRunnable = new RemoteRunnable({
-    url: "https://api.nobushi.yuiseki.net/future_dialy/",
+    url: "https://api.nobushi.yuiseki.net/future_diary/",
   });
 
   try {

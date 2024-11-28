@@ -41,17 +41,17 @@ export const exampleStations: Array<{
   {
     prefecture: "沖縄県",
     region: "沖縄県那覇市",
-    name: "県庁前駅",
-    osmId: "node/6540547646",
-    lat: 26.2143841,
-    lon: 127.6793341,
-  },
-  {
-    prefecture: "沖縄県",
-    region: "沖縄県那覇市",
     name: "牧志駅",
     osmId: "node/6540547650",
     lat: 26.2171925,
     lon: 127.6925906,
+  },
+  {
+    prefecture: "沖縄県",
+    region: "沖縄県那覇市",
+    name: "県庁前駅",
+    osmId: "node/6540547646",
+    lat: 26.2143841,
+    lon: 127.6793341,
   },
 ];
