@@ -18,6 +18,10 @@ export const NobushiUserProfileCollector: React.FC<{
   const [gender, setGender] = useState<NobushiUserProfile["gender"]>(
     savedGender ? (savedGender as NobushiUserProfile["gender"]) : "未回答"
   );
+  const savedLocation = localStorage.getItem("nobushiUserProfileLocation");
+  const [location, setLocation] = useState<string | "未回答">(
+    savedLocation ? savedLocation : "未回答"
+  );
   const savedJob = localStorage.getItem("nobushiUserProfileJob");
   const [job, setJob] = useState<string | "未回答">(
     savedJob ? savedJob : "未回答"
@@ -36,6 +40,10 @@ export const NobushiUserProfileCollector: React.FC<{
   }, [gender]);
 
   useEffect(() => {
+    localStorage.setItem("nobushiUserProfileLocation", location);
+  }, [location]);
+
+  useEffect(() => {
     localStorage.setItem("nobushiUserProfileJob", job);
   }, [job]);
 
@@ -47,6 +55,7 @@ export const NobushiUserProfileCollector: React.FC<{
     onProfileCollected({
       age,
       gender,
+      location,
       job,
       family,
     });
@@ -119,6 +128,18 @@ export const NobushiUserProfileCollector: React.FC<{
             </select>
           </div>
         </div>
+      </div>
+      <div style={{ width: "100%", textAlign: "center" }}>
+        <label>現住所</label>
+      </div>
+      <div style={{ width: "100%", textAlign: "center" }}>
+        <textarea
+          style={{ width: "200px" }}
+          placeholder="東京都千代田区"
+          value={location}
+          rows={2}
+          onChange={(e) => setLocation(e.target.value)}
+        />
       </div>
       <div style={{ width: "100%", textAlign: "center" }}>
         <label>職業</label>
