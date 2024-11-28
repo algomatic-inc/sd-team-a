@@ -4,11 +4,7 @@ export const NobushiAutoResizeTextarea: React.FC<{
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-}> = ({
-  value,
-  onChange,
-  placeholder = "人形町駅から秋葉原駅までの散歩道",
-}) => {
+}> = ({ value, onChange, placeholder = "銀座駅から東京駅までの散歩道" }) => {
   const [mounted, setMounted] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
