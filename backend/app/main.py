@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request
 import os
 from io import BytesIO
 import json
-from fastapi.responses import Response
+from fastapi.responses import Response, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -36,9 +36,10 @@ app.add_middleware(
 )
 
 
+# https://algomatic-inc.github.io/sd-team-nobushi/ にリダイレクトさせる
 @app.get('/')
 def read_root():
-    return {'Nobushi': 'Hello World!'}
+    return RedirectResponse(url='https://algomatic-inc.github.io/sd-team-nobushi/')
 
 
 @app.get("/real_estate_info")
