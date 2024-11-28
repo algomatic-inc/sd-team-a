@@ -76,6 +76,7 @@ export const StrollPage = () => {
   const [routeGeoJson, setRouteGeoJson] = useState<turf.AllGeoJSON | null>(
     null
   );
+
   // Google Street View Imageを表示するためのModalの表示状態
   const [streetViewModalIsOpen, setStreetViewModalIsOpen] = useState(false);
 

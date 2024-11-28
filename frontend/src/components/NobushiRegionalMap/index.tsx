@@ -26,6 +26,9 @@ import { exampleStations } from "../../lib/penetrator/exampleStations";
 import { getValhallaResponseJsonWithCache } from "../../lib/osm/getValhalla";
 import { decodePolyline } from "../../lib/osm/decodePolyline";
 import { NobushiUserProfile } from "../../types/NobushiUserProfile";
+import { getRouteSatelliteImageryUrl } from "../../lib/nobushi/getRouteSatelliteImageryUrl";
+import { futureDiaryRouteSatelliteImagery } from "../../lib/gemini/futureDiaryRouteImagery";
+import { convertProfileToText } from "../../lib/nobushi/convertProfileToText";
 
 export const NobushiRegionalMap: React.FC<{
   region: string;
@@ -42,13 +45,13 @@ export const NobushiRegionalMap: React.FC<{
     FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties> | undefined
   >(undefined);
 
-  /*
   const [requiredTime, setRequiredTime] = useState<number | undefined>(
     undefined
   );
-  */
 
   const [routeGeoJson, setRouteGeoJson] = useState<turf.AllGeoJSON>();
+
+  const [futureDiary, setFutureDiary] = useState<string | undefined>(undefined);
 
   // サンプルの不動産のGPS座標 (出発地)
   const exampleRealEstateForRegion = exampleRealEstates
@@ -184,8 +187,8 @@ export const NobushiRegionalMap: React.FC<{
             lon: exampleStationForRegion["lon"],
           }
         );
-        //const time = valhallaResult.trip.summary.time;
-        //setRequiredTime(time);
+        const time = valhallaResult.trip.summary.time;
+        setRequiredTime(time);
         const polyline = decodePolyline(valhallaResult.trip.legs[0].shape);
         const newGeoJson = {
           type: "FeatureCollection",
@@ -215,6 +218,50 @@ export const NobushiRegionalMap: React.FC<{
       }
     }, 5000);
   }, [exampleRealEstateForRegion, exampleStationForRegion, regionGeoJson]);
+
+  useEffect(() => {
+    const doit = async () => {
+      if (routeGeoJson && requiredTime && !futureDiary) {
+        const profileText = convertProfileToText(profile);
+        console.log("profileText", profileText);
+        const departureText =
+          exampleRealEstateForRegion["region"] +
+          exampleRealEstateForRegion["name"];
+        const destinationText = exampleRealEstateForRegion["name"];
+        const routeText = `${departureText}から${destinationText}まで。`;
+        console.log("routeText", routeText);
+        const imageUrl = await getRouteSatelliteImageryUrl(routeGeoJson);
+        // imageUrl を fetch して base64 に変換
+        const res = await fetch(imageUrl);
+        const blob = await res.blob();
+        // futureDiaryRouteSatelliteImagery に base64 を渡す
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = async () => {
+          let base64data = reader.result as string;
+          base64data = base64data
+            .replace("data:application/octet-stream;", "data:image/png;")
+            .replace("data:image/png;base64,", "");
+          const newFutureDiary = await futureDiaryRouteSatelliteImagery(
+            profileText,
+            routeText,
+            base64data
+          );
+          if (newFutureDiary) {
+            console.log("newFutureDiary", newFutureDiary);
+            setFutureDiary(newFutureDiary);
+          }
+        };
+      }
+    };
+    doit();
+  }, [
+    routeGeoJson,
+    requiredTime,
+    futureDiary,
+    profile,
+    exampleRealEstateForRegion,
+  ]);
 
   return (
     <>
