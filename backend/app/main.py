@@ -12,6 +12,7 @@ from langserve import add_routes
 from lib.penetrator import get_estate_info_by_coordinate
 from lib.geojson_to_img import geojson_to_img
 from lib.chain.nobushi import nobushi_chain
+from lib.chain.future_diary import future_diary_chain
 from lib.streetview_image import get_streetview_image_by_coordinate
 
 
@@ -124,6 +125,12 @@ add_routes(
     app,
     nobushi_chain(),
     path="/nobushi",
+)
+
+add_routes(
+    app,
+    future_diary_chain(),
+    path="/future_diary",
 )
 
 if __name__ == "__main__":
