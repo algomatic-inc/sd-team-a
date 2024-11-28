@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Map, {
   AttributionControl,
   ControlPosition,
   Layer,
   MapRef,
+  Marker,
   Source,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -20,26 +21,44 @@ import {
   Position,
   GeoJsonProperties,
 } from "geojson";
-import { getRealEstateInfo } from "../../lib/penetrator/getRealEstateInfo";
+import { exampleRealEstates } from "../../lib/penetrator/exampleRealEstates";
+import { exampleStations } from "../../lib/penetrator/exampleStations";
+import { getValhallaResponseJsonWithCache } from "../../lib/osm/getValhalla";
+import { decodePolyline } from "../../lib/osm/decodePolyline";
+import { NobushiUserProfile } from "../../types/NobushiUserProfile";
 
 export const NobushiRegionalMap: React.FC<{
   region: string;
+  profile: NobushiUserProfile;
   attributionPosition: ControlPosition;
-}> = ({ region, attributionPosition }) => {
+}> = ({ region, profile, attributionPosition }) => {
   const mapRef = useRef<MapRef | null>(null);
 
   const [landMask, setLandMask] = useState<
     FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties> | undefined
   >(undefined);
 
-  const [geoJson, setGeoJson] = useState<
+  const [regionGeoJson, setRegionGeoJson] = useState<
     FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties> | undefined
   >(undefined);
 
-  // 人が住める12個のGPS座標
-  const [peopleCanLiveCoordinates, setPeopleCanLiveCoordinates] = useState<
-    Position[]
-  >([]);
+  /*
+  const [requiredTime, setRequiredTime] = useState<number | undefined>(
+    undefined
+  );
+  */
+
+  const [routeGeoJson, setRouteGeoJson] = useState<turf.AllGeoJSON>();
+
+  // サンプルの不動産のGPS座標 (出発地)
+  const exampleRealEstateForRegion = exampleRealEstates
+    .filter((i) => i.region === region)
+    .slice(0, 1)[0];
+
+  // サンプルの駅のGPS座標 (目的地)
+  const exampleStationForRegion = exampleStations
+    .filter((i) => i.region === region)
+    .slice(0, 1)[0];
 
   useEffect(() => {
     // 日本列島マスクデータのロード
@@ -132,9 +151,9 @@ export const NobushiRegionalMap: React.FC<{
             type: "FeatureCollection",
             features: [clipped],
           } as FeatureCollection<Polygon | MultiPolygon, GeoJsonProperties>;
-          setGeoJson(clippedFeatureCollection);
+          setRegionGeoJson(clippedFeatureCollection);
         } else {
-          setGeoJson(newGeoJson);
+          setRegionGeoJson(newGeoJson);
         }
       }
     };
@@ -142,97 +161,60 @@ export const NobushiRegionalMap: React.FC<{
   }, [region, landMask]);
 
   useEffect(() => {
-    if (geoJson) {
-      fitBoundsToGeoJson(mapRef, geoJson, {
+    if (regionGeoJson) {
+      fitBoundsToGeoJson(mapRef, regionGeoJson, {
         top: 100,
         bottom: 100,
         left: 100,
         right: 100,
       });
     }
-  }, [geoJson]);
+  }, [regionGeoJson]);
 
-  // geoJsonのPolygon or MultiPolygonの内側のランダムなGPS座標を取得する
-  // turfにはそんな機能ないので頑張る
-  const getRandomGeoJsonCoordinate = useCallback(() => {
-    if (!geoJson) {
-      return;
-    }
-    const feature = geoJson.features[0];
-    if (!feature) {
-      return;
-    }
-    if (
-      feature.geometry.type !== "Polygon" &&
-      feature.geometry.type !== "MultiPolygon"
-    ) {
-      return;
-    }
-    const coordinates = feature.geometry.coordinates;
-    if (!coordinates) {
-      return;
-    }
-    // coordinatesはPolygonの場合はnumber[][][]、MultiPolygonの場合はnumber[][][][]
-    if (feature.geometry.type === "Polygon") {
-      // Polygonの場合、Polygonの内側のランダムな座標を取得する
-      const polygon = turf.polygon(coordinates as number[][][]);
-      const bbox = turf.bbox(polygon);
-      const randomPoint = turf.randomPosition(bbox);
-      return randomPoint;
-    }
-    if (feature.geometry.type === "MultiPolygon") {
-      // MultiPolygonの場合、MultiPolygonの内側のランダムな座標を取得する
-      const multiPolygon = turf.multiPolygon(coordinates as number[][][][]);
-      const bbox = turf.bbox(multiPolygon);
-      const randomPoint = turf.randomPosition(bbox);
-      return randomPoint;
-    }
-  }, [geoJson]);
-
-  // ランダムなGPS座標を繰り返し取得して、getRealEstateInfoを呼び出して、人が住めるかどうかを判定し、
-  // 人が住める場合はpeopleCanLiveCoordinatesに追加する
-  // peopleCanLiveCoordinatesが12個になるまで繰り返す
   useEffect(() => {
     const doit = async () => {
-      if (!geoJson) {
-        return;
-      }
-      if (peopleCanLiveCoordinates.length >= 3) {
-        console.log(`peopleCanLiveCoordinates.length >= 10`);
-        return;
-      }
-      const promises = [];
-      for (let i = 0; i < 3; i++) {
-        const coordinate = getRandomGeoJsonCoordinate();
-        if (!coordinate) {
-          continue;
-        }
-        promises.push(
-          getRealEstateInfo(coordinate[1], coordinate[0]).then((res) => {
-            if (!res) {
-              return;
-            }
-            if (
-              res["specificUseDistrict"] === "取得失敗" ||
-              res["specificUseDistrict"] === "市街化区域外" ||
-              res["specificUseDistrict"] === "工業専用地域"
-            ) {
-              // 人が住めない
-              return;
-            }
-            if (res["chibanAddress"] === "該当なし") {
-              // 人が住めない
-              return;
-            }
-            console.log(`res:`, res);
-            setPeopleCanLiveCoordinates((prev) => [...prev, coordinate]);
-          })
+      if (exampleRealEstateForRegion && exampleStationForRegion) {
+        const valhallaResult = await getValhallaResponseJsonWithCache(
+          {
+            lat: exampleRealEstateForRegion["lat"],
+            lon: exampleRealEstateForRegion["lon"],
+          },
+          {
+            lat: exampleStationForRegion["lat"],
+            lon: exampleStationForRegion["lon"],
+          }
         );
+        //const time = valhallaResult.trip.summary.time;
+        //setRequiredTime(time);
+        const polyline = decodePolyline(valhallaResult.trip.legs[0].shape);
+        const newGeoJson = {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "LineString",
+                coordinates: polyline,
+              },
+            },
+          ],
+        } as turf.AllGeoJSON;
+        setRouteGeoJson(newGeoJson);
+        fitBoundsToGeoJson(mapRef, newGeoJson, {
+          top: 100,
+          bottom: 100,
+          left: 100,
+          right: 300,
+        });
       }
-      await Promise.all(promises);
     };
-    doit();
-  }, [geoJson, getRandomGeoJsonCoordinate, peopleCanLiveCoordinates.length]);
+    setTimeout(() => {
+      if (regionGeoJson) {
+        doit();
+      }
+    }, 5000);
+  }, [exampleRealEstateForRegion, exampleStationForRegion, regionGeoJson]);
 
   return (
     <>
@@ -249,13 +231,60 @@ export const NobushiRegionalMap: React.FC<{
         attributionControl={false}
       >
         <AttributionControl position={attributionPosition} />
-        {geoJson && (
+        {regionGeoJson && (
+          <>
+            <Marker
+              longitude={exampleStationForRegion["lon"]}
+              latitude={exampleStationForRegion["lat"]}
+              anchor="center"
+            >
+              <img
+                width={40}
+                height={21}
+                src="https://i.gyazo.com/0ba6e9fe78a7835c09125aaad71b1921.png"
+              />
+            </Marker>
+            <Marker
+              longitude={exampleRealEstateForRegion["lon"]}
+              latitude={exampleRealEstateForRegion["lat"]}
+              anchor="center"
+            >
+              <img
+                width={30}
+                height={28}
+                src="https://i.gyazo.com/8daf9d4f135ca9c27a1635032b3ff3a1.png"
+              />
+            </Marker>
+          </>
+        )}
+        {routeGeoJson && (
+          <>
+            <Source
+              key={`route-${region}-source`}
+              id={`route-${region}`}
+              type="geojson"
+              data={routeGeoJson}
+            >
+              <Layer
+                {...{
+                  id: `route-${region}-line`,
+                  type: "line",
+                  paint: {
+                    "line-color": "red",
+                    "line-width": 2,
+                  },
+                }}
+              />
+            </Source>
+          </>
+        )}
+        {regionGeoJson && (
           <>
             <Source
               key={`region-${region}-source`}
               id={`region-${region}`}
               type="geojson"
-              data={geoJson}
+              data={regionGeoJson}
             >
               <Layer
                 {...{
@@ -273,7 +302,7 @@ export const NobushiRegionalMap: React.FC<{
                   type: "fill",
                   paint: {
                     "fill-color": "blue",
-                    "fill-opacity": 0.2,
+                    "fill-opacity": 0.1,
                   },
                 }}
               />

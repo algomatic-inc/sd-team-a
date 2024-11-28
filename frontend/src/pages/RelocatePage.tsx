@@ -1,33 +1,5 @@
 import React, { useCallback, useState } from "react";
 
-// libs
-/*
-// osm
-import { getNominatimResponseJsonWithCache } from "../lib/osm/getNominatim";
-import { getValhallaResponseJsonWithCache } from "../lib/osm/getValhalla";
-import { decodePolyline } from "../lib/osm/decodePolyline";
-// maplibre
-import { fitBoundsToGeoJson } from "../lib/maplibre/fitBoundsToGeoJson";
-// gemini
-import { extractDepartureAndDestination } from "../lib/gemini/extractDepartureAndDestination";
-import { explainSatelliteImagery } from "../lib/gemini/explainRouteImagery";
-import { getRouteSatelliteImageryUrl } from "../lib/nobushi/getRouteSatelliteImageryUrl";
-
-// types
-import { NobushiChatMessage } from "../types/NobushiChatMessage";
-
-// hooks
-import { useScrollToBottom } from "../hooks/scrollToBottom";
-*/
-
-// components
-/*
-import { NobushiAutoResizeTextarea } from "../components/NobushiAutoResizeTextarea";
-import { NobushiSubmitButton } from "../components/NobushiSubmitButton";
-import { NobushiGreetings } from "../components/NobushiGreetings";
-import { NobushiSystemMessages } from "../components/NobushiSystemMessages";
-import { NobushiChatMessageLogs } from "../components/NobushiChatMessageLogs";
-*/
 import { NobushiRegionalMap } from "../components/NobushiRegionalMap";
 import { NobushiRelocateAreaSelector } from "../components/NobushiRelocateAreaSelector";
 import { NobushiAnimatedText } from "../components/NobushiAnimatedText";
@@ -37,59 +9,14 @@ import { NobushiUserProfile } from "../types/NobushiUserProfile";
 export const RelocatePage: React.FC = () => {
   const [profile, setProfile] = useState<NobushiUserProfile | null>(null);
 
-  const [area1, setArea1] = useState<string>("東京都台東区");
-  const [area2, setArea2] = useState<string>("東京都中野区");
+  const [area1, setArea1] = useState<string>("東京都中野区");
+  const [area2, setArea2] = useState<string>("東京都台東区");
   const [area3, setArea3] = useState<string>("兵庫県神戸市");
-  const [area4, setArea4] = useState<string>("愛知県名古屋市");
+  const [area4, setArea4] = useState<string>("沖縄県那覇市");
 
   const onProfileCollected = useCallback((profile: NobushiUserProfile) => {
     setProfile(profile);
   }, []);
-
-  /*
-  // systemMessages 関連
-  const systemMessagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollToBottomOfSystemMessages =
-    useScrollToBottom(systemMessagesEndRef);
-  const [systemMessages, setSystemMessages] = useState([
-    "各地域でピンを立ててください…",
-  ]);
-
-  // chatMessages 関連
-  const chatMessagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollToBottomOfChatMessages = useScrollToBottom(chatMessagesEndRef);
-  const [chatMessages, setChatMessages] = useState<NobushiChatMessage[]>([]);
-
-  // NobushiAutoResizeTextarea の入力状態
-  const [inputValue, setInputValue] = useState("");
-
-  // systemMessage に表示する内容を更新する関数
-  const insertNewSystemMessage = useCallback(
-    (message: string) => {
-      setSystemMessages((prev) => [...prev, message]);
-      scrollToBottomOfSystemMessages();
-    },
-    [scrollToBottomOfSystemMessages]
-  );
-
-  // chatMessage に表示する内容を更新する関数
-  const insertNewChatMessage = useCallback(
-    (message: NobushiChatMessage) => {
-      setChatMessages((prev) => [...prev, message]);
-      scrollToBottomOfChatMessages();
-    },
-    [scrollToBottomOfChatMessages]
-  );
-
-  const onSubmit = useCallback(async () => {
-    insertNewChatMessage({
-      role: "user",
-      type: "text",
-      content: inputValue,
-    });
-    insertNewSystemMessage("ユーザーの入力を分析中…");
-  }, [insertNewChatMessage, inputValue, insertNewSystemMessage]);
-  */
 
   return (
     <div
@@ -109,7 +36,8 @@ export const RelocatePage: React.FC = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "white",
+          color: "white",
+          backgroundColor: "midnightblue",
           zIndex: 100000,
         }}
       >
@@ -164,21 +92,14 @@ export const RelocatePage: React.FC = () => {
                 >
                   <NobushiRegionalMap
                     region={area}
-                    attributionPosition={
-                      idx === 0
-                        ? "bottom-right"
-                        : idx === 1
-                        ? "bottom-left"
-                        : idx === 2
-                        ? "top-right"
-                        : "top-left"
-                    }
+                    profile={profile}
+                    attributionPosition={"top-right"}
                   />
                   <div
                     style={{
                       position: "absolute",
-                      [idx < 2 ? "bottom" : "top"]: "25px",
-                      [idx % 2 === 0 ? "right" : "left"]: "5px",
+                      top: "25px",
+                      right: "5px",
                       color: "white",
                     }}
                   >

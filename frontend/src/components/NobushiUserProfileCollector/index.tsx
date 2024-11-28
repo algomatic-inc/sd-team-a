@@ -53,56 +53,91 @@ export const NobushiUserProfileCollector: React.FC<{
   };
 
   return (
-    <div>
-      <div>
-        <label>年齢</label>
-        {
-          // 18歳から100歳までの範囲で選択できる
-        }
-        <select
-          value={age}
-          onChange={(e) =>
-            setAge(
-              e.target.value === "未回答" ? "未回答" : parseInt(e.target.value)
-            )
-          }
-        >
-          <option value="未回答">未回答</option>
-          {Array.from({ length: 100 - 18 + 1 }, (_, i) => i + 18).map((age) => (
-            <option key={age} value={age}>
-              {age}
-            </option>
-          ))}
-        </select>
+    <div
+      style={{
+        width: "300px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "4px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "space-between",
+          width: "100%",
+        }}
+      >
+        <div style={{ flexGrow: 1 }}>
+          <div style={{ width: "100%", textAlign: "center" }}>
+            <label>年齢</label>
+          </div>
+          <div style={{ width: "100%", textAlign: "center" }}>
+            {
+              // 18歳から100歳までの範囲で選択できる
+            }
+            <select
+              defaultValue={age}
+              onChange={(e) =>
+                setAge(
+                  e.target.value === "未回答"
+                    ? "未回答"
+                    : parseInt(e.target.value)
+                )
+              }
+            >
+              <option value="未回答">未回答</option>
+              {Array.from({ length: 100 - 18 + 1 }, (_, i) => i + 18).map(
+                (value) => (
+                  <option key={`age-${value}`} value={value}>
+                    {value}
+                  </option>
+                )
+              )}
+            </select>
+          </div>
+        </div>
+        <div style={{ flexGrow: 1 }}>
+          <div style={{ width: "100%", textAlign: "center" }}>
+            <label>性別</label>
+          </div>
+          <div style={{ width: "100%", textAlign: "center" }}>
+            <select
+              defaultValue={gender}
+              onChange={(e) =>
+                setGender(e.target.value as NobushiUserProfile["gender"])
+              }
+            >
+              {["未回答", "男", "女", "その他"].map((value) => {
+                return (
+                  <option key={`gender-${value}`} value={value}>
+                    {value}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
       </div>
-      <div>
-        <label>性別</label>
-        <select
-          value={gender}
-          onChange={(e) =>
-            setGender(e.target.value as NobushiUserProfile["gender"])
-          }
-        >
-          <option value="未回答">未回答</option>
-          <option value="男">男</option>
-          <option value="女">女</option>
-          <option value="その他">その他</option>
-        </select>
-      </div>
-      <div>
+      <div style={{ width: "100%", textAlign: "center" }}>
         <label>職業</label>
-        <input
-          type="text"
-          placeholder="職業"
+      </div>
+      <div style={{ width: "100%", textAlign: "center" }}>
+        <textarea
+          style={{ width: "200px" }}
+          placeholder="ソフトウェアエンジニア"
           value={job}
           onChange={(e) => setJob(e.target.value)}
         />
       </div>
-      <div>
+      <div style={{ width: "100%", textAlign: "center" }}>
         <label>家族構成</label>
-        <input
-          type="text"
-          placeholder="家族構成"
+      </div>
+      <div style={{ width: "100%", textAlign: "center" }}>
+        <textarea
+          style={{ width: "200px" }}
+          placeholder="独身"
           value={family}
           onChange={(e) => setFamily(e.target.value)}
         />

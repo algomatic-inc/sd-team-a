@@ -35,20 +35,18 @@ export const NobushiRelocateAreaSelector: React.FC<{
         >
           <div>
             <select
-              value={currentArea}
+              defaultValue={currentArea}
               onChange={(e) => onSelect(e.target.value)}
               style={{
-                fontSize: "1.5rem",
+                fontSize: "1.4rem",
               }}
+              disabled={true}
             >
               {japanCapitalByPrefectures.map((capitalByPrefecture, index) => {
                 return (
                   <option
                     key={`${capitalByPrefecture}-${index}`}
                     value={capitalByPrefecture}
-                    selected={
-                      currentArea.includes(capitalByPrefecture) ? true : false
-                    }
                     disabled={
                       currentAreas.filter((area) =>
                         japanPrefectures.includes(area)
