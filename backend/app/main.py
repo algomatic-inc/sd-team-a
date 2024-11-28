@@ -42,6 +42,12 @@ def read_root():
     return RedirectResponse(url='https://algomatic-inc.github.io/sd-team-nobushi/')
 
 
+# https://algomatic-inc.github.io/sd-team-nobushi/#mode=relocate にリダイレクトさせる
+@app.get('/relocate')
+def read_relocate():
+    return RedirectResponse(url='https://algomatic-inc.github.io/sd-team-nobushi/#mode=relocate')
+
+
 @app.get("/real_estate_info")
 @app.post("/real_estate_info")
 async def real_estate_info(request: Request):
