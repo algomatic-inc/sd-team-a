@@ -128,6 +128,7 @@ export const NobushiUserProfileCollector: React.FC<{
           style={{ width: "200px" }}
           placeholder="ソフトウェアエンジニア"
           value={job}
+          rows={3}
           onChange={(e) => setJob(e.target.value)}
         />
       </div>
@@ -139,6 +140,7 @@ export const NobushiUserProfileCollector: React.FC<{
           style={{ width: "200px" }}
           placeholder="独身"
           value={family}
+          rows={3}
           onChange={(e) => setFamily(e.target.value)}
         />
       </div>
